@@ -1,67 +1,4 @@
-var demodata = {
-    graph: {
-        padding: [50, 40, 50, 80]
-    },
-    legend: {
-        x: 100,
-        y: 0,
-        padding: [5,20,0,0]
-    },
-    xAxis: {
-        label: {
-            y: 20,
-            color: '#000'
-        },
-        markEvery: 2,
-        maxRange: 11
-    },
-    yAxis: {
-        label: {
-            color: '#000',
-            x: -30,
-            font_size: 12
-        },
-        markEvery: 20
-    },
-    lines: [
-    {
-        name: 'Workspace',
-        classname: 'workspace',
-        plot: [20, 40, 60, 60, 70, 100, 60, 25, 44, 36, 20],
-        rad: 6
-    },
-    {
-        name: 'Meeting',
-        classname: 'meeting',
-        // dash: '10,5',
-        plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
-        rad: 6
-    },
-    {
-        name: 'Breakout Space',
-        classname: 'breakspace',
-        dash: '10,5',
-        plot: [10, 35, 70, 100, 65, 40, 20, 45, 90, 70, 30],
-        rad: 6
-    },
-    {
-        name: 'Kitchen',
-        classname: 'kithen',
-        dash: '10,5',
-        plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
-        rad: 6
-    }
-    ],
-    plot: {
-        range: {
-            from: 7,
-            to: 17
-        }
-    }
-};
-
-
-app.mods.graph = function($element) {
+window.chartress = function($element){
     var that = this;
     var el = $element[0];
     var g = {};
@@ -118,21 +55,23 @@ app.mods.graph = function($element) {
                 yPoints++;
             }
         }
-        
+        g.yLabels = g.draw.group().addClass('graph__labels graph__labels--yAxis');
         g.settings.yPoints = [];
         for (i = 0; i < yPoints; i++) {
             var proc = 1 - ((i+1) / yPoints);
-            var posY = ((g.settings.height + (g.settings.height * 0.13)) * proc) + g.options.graph.padding[0];
+            var posY = ((g.settings.height + (g.settings.height * 0.146)) * proc) + g.options.graph.padding[0];
             var text = i*g.options.yAxis.markEvery;
             if (text !== 0) {
-                var tnode = g.draw.text(text.toString())
+
+                var tnode = g.yLabels.text(text.toString())
                     .fill(g.options.yAxis.label.color)
                     .font({
                         anchor: 'middle',
-                        size: 12
+                        size: 14
                     })
                     .dx(g.settings.rect.left + g.options.yAxis.label.x)
-                    .dy(posY);
+                    .dy(posY)
+                    .addClass('graph__labels__label graph__labels__label--yAxis');
 
                 tnode.dy((tnode.node.scrollHeight / 2)*-1)
                 g.settings.yPoints.push(posY);
@@ -144,7 +83,7 @@ app.mods.graph = function($element) {
             dateRange = g.options.plot.range.to - g.options.plot.range.from;
 
         g.settings.xPoints = [];
-
+        g.xLabels = g.draw.group().addClass('graph__labels graph__labels--xAxis');
         // todo: make xAxis.markEvery work properly
         for (i = 0; i <= dateRange; i++) {
             var time = g.options.plot.range.from + i;
@@ -156,15 +95,16 @@ app.mods.graph = function($element) {
             var posX = ((g.settings.width) * proc) + g.options.graph.padding[3];
 
             if (i%g.options.xAxis.markEvery === 0) {
-                g.draw.text(text)
+
+                g.xLabels.text(text)
                     .fill(g.options.xAxis.label.color)
                     .font({
                         anchor: 'middle',
-                        size: 12
+                        size: 14
                     })
                     .dx(posX)
                     .dy(g.settings.rect.bottom + g.options.xAxis.label.y)
-                    .addClass('graph__xlabel');
+                    .addClass('graph__labels__label graph__labels--xAxis');
 
             }
 
@@ -200,7 +140,7 @@ app.mods.graph = function($element) {
 
     g.drawLegend = function(){
         g.draw_legend = g.draw.group().addClass('graph__legend').font({
-            size: 14
+            size: 13
         });
 
         var pX = 0;
@@ -235,7 +175,7 @@ app.mods.graph = function($element) {
             text.dx(tx);
             text.dy(ty);
             var rad = line.rad;
-            var compensate = (text.node.scrollHeight * 1.1) * 0.3;
+            var compensate = (text.node.scrollHeight * 1.1) * 0.2;
             var line_path = [
                 [-30,pY+(text.node.scrollHeight-compensate) + ty],
                 [0,pY+(text.node.scrollHeight-compensate) + ty],

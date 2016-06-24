@@ -20,9 +20,9 @@ window.chartress = function($element, data){
 
         _.forEach(g.options.lines, function(line) {
             var plot = _.clone(line.plot);
-            if (plot.length > g.options.xAxis.maxRange) {
+            if (plot.length > g.options.xAxis.maxRangeLength) {
                 plot.reverse();
-                plot.length = g.options.xAxis.maxRange;
+                plot.length = g.options.xAxis.maxRangeLength;
                 plot.reverse();
             }
             line.__plot = _.clone(plot);
@@ -80,13 +80,13 @@ window.chartress = function($element, data){
 
         // draw xaxis
         var xPoints = g.settings.longestLine,
-            dateRange = g.options.plot.range.to - g.options.plot.range.from;
+            dateRange = g.options.xAxis.range.to - g.options.xAxis.range.from;
 
         g.settings.xPoints = [];
         g.xLabels = g.draw.group().addClass('graph__labels graph__labels--xAxis');
         // todo: make xAxis.markEvery work properly
         for (i = 0; i <= dateRange; i++) {
-            var time = g.options.plot.range.from + i;
+            var time = g.options.xAxis.range.from + i;
             if (time < 10) {
                 time = '0'+time;
             }
@@ -198,6 +198,7 @@ window.chartress = function($element, data){
     };
 
     g.drawGraph = function() {
+        g.clear();
         g.setBounds();
         g.drawBounds();
         g.drawLines();
@@ -208,7 +209,6 @@ window.chartress = function($element, data){
 
     g.canvasResize = function(){
         g.draw.spof();
-        g.clear();
         g.drawGraph();
     };
 
@@ -221,4 +221,6 @@ window.chartress = function($element, data){
             to = setTimeout(g.canvasResize, 100);
         }
     });
+
+    return g;
 };

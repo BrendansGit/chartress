@@ -1,11 +1,11 @@
 # chartress.js
 the javascript svg chart library that you have beein waiting for.
 
-## usage:
+## Usage:
 ```javascript
 var graph = new chartress($element, data);
 ```
-### example data:
+### Example data:
 ```javascript
 var data = {
 	graph: {
@@ -44,21 +44,8 @@ var data = {
 		rad: 6
 	},
 	{
-		name: 'Meeting',
-		classname: 'meeting',
-		plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
-		rad: 6
-	},
-	{
-		name: 'Breakout Space',
-		classname: 'breakspace',
-		dash: '10,5',
-		plot: [10, 35, 70, 100, 65, 40, 20, 45, 90, 70, 30],
-		rad: 6
-	},
-	{
 		name: 'Kitchen',
-		classname: 'kithen',
+		classname: 'kitchen',
 		dash: '10,5',
 		plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
 		rad: 6
@@ -66,3 +53,6 @@ var data = {
 	]
 }
 ```
+
+### Demos:
+- [Simple Chart](http://codepen.io/jsnanigans/pen/dXNOXE)

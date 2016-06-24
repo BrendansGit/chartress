@@ -2,8 +2,8 @@
     "name": "chartress",
     "version": "0.0.1",
     "dependencies": {
-		"jquery": "~1.11",
-		"hammer.js": "~2.0.8"
+		"jquery": null,
+		"hammer.js": null
 	},
 	"main": "dist/jquery.js",
 	"license": "MIT"

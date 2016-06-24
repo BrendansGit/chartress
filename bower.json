@@ -5,6 +5,6 @@
 		"jquery": null,
 		"svg.js": null
 	},
-	"main": "dist/jquery.js",
+	"main": "dist/chartress.js",
 	"license": "MIT"
 }

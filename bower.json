@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "dependencies": {
 		"jquery": null,
-		"hammer.js": null
+		"svg.js": null
 	},
 	"main": "dist/jquery.js",
 	"license": "MIT"

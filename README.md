@@ -5,7 +5,7 @@ the javascript svg chart library that you have beein waiting for.
 ```javascript
 var graph = new chartress($element, data);
 ```
-### Example data:
+## Example data:
 ```javascript
 var data = {
 	graph: {
@@ -54,5 +54,5 @@ var data = {
 }
 ```
 
-### Demos:
+## Demos:
 - [Simple Chart](http://codepen.io/jsnanigans/pen/dXNOXE)

@@ -9,7 +9,8 @@ var graph = new chartress($element, data);
 ```javascript
 var data = {
 	graph: {
-		padding: [50, 40, 50, 80]
+		padding: [50, 40, 50, 80],
+        redrawTimeout: 1
 	},
 	legend: {
 		x: 100,

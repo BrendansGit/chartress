@@ -218,7 +218,7 @@ window.chartress = function($element, data){
     SVG.on(window, 'resize', function() {
         if (sizeCache[0] !== $element.width() || sizeCache[1] !== $element.height()) {
             clearTimeout(to);
-            to = setTimeout(g.canvasResize, 100);
+            to = setTimeout(g.canvasResize, g.options.graph.redrawTimeout || 100);
         }
     });
 

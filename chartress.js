@@ -1,4 +1,4 @@
-window.chartress = function($element){
+window.chartress = function($element, data){
     var that = this;
     var el = $element[0];
     var g = {};
@@ -9,7 +9,7 @@ window.chartress = function($element){
     g.settings = {
         yMax: 0
     };
-    g.options = demodata;
+    g.options = data;
     g.draw = SVG(el).size('100%', '100%').spof();
 
     g.clear = function(){

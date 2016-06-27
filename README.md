@@ -6,7 +6,7 @@
 
 ## Usage
 
-#### Install chartress
+#### Download chartress
 ```bash
 bower install chartress --save
 ```

@@ -1,6 +1,9 @@
 window.chartress = function($element, data){
     var that = this;
-    var el = $element[0];
+    var el = $element;
+    if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
+        el = el[0];
+    }
     var g = {};
     function sortNumber(a,b) {
         return b - a;
@@ -33,42 +36,45 @@ window.chartress = function($element, data){
 
     g.setBounds = function() {
         if (g.settings.type === 'normal') {
-            _.forEach(g.options.lines, function(line) {
-                var plot = _.clone(line.plot);
+            for (var key in g.options.lines) {
+                var line = g.options.lines[key];
+                var plot = line.plot.slice(0);
                 if (plot.length > g.options.xAxis.maxRangeLength) {
                     plot.reverse();
                     plot.length = g.options.xAxis.maxRangeLength;
                     plot.reverse();
                 }
-                line.__plot = _.clone(plot);
+                line.__plot = plot.slice(0);
                 plot.sort(sortNumber);
                 if (g.settings.yMax < plot[0]) {
                     g.settings.yMax = plot[0];
                 }
-            });
+            };
         }
         if (g.settings.type === 'pipes') {
             g.settings.largestPipe = 0;
-            _.forEach(g.options.lines, function(line){
+            for (var key in g.options.lines) {
+                var line = g.options.lines[key];
                 if (g.settings.largestPipe < line.value) {
                     g.settings.largestPipe = line.value;
                 }
-            })
+            };
         }
         if (g.settings.type === 'pie') {
             g.settings.pie = {};
             g.settings.pie.total = g.options.pie.total || false;
             if (g.settings.pie.total === false) {
-                _.forEach(g.options.lines, function(line) {
+                for (var key in g.options.lines) {
+                    var line = g.options.lines[key];
                     g.settings.pie.total += line.value;
-                });
+                }
             }
         }
 
-        g.settings.outweWidth = $element.width();
-        g.settings.width = $element.width() - g.settings.padding.right - g.settings.padding.left;
-        g.settings.outerHeight = $element.height();
-        g.settings.height = $element.height() - g.settings.padding.top - g.settings.padding.bottom;
+        g.settings.outweWidth = el.scrollWidth;
+        g.settings.width = el.scrollWidth - g.settings.padding.right - g.settings.padding.left;
+        g.settings.outerHeight = el.scrollHeight;
+        g.settings.height = el.scrollHeight - g.settings.padding.top - g.settings.padding.bottom;
 
         g.settings.rect = {
             top: g.settings.padding.top,
@@ -152,28 +158,32 @@ window.chartress = function($element, data){
 
     g.drawLines = function(){
         g.draw_plots = g.draw.group().addClass('chartress__plots');
-        _.map(g.options.lines, function(line){
+        for (var key in g.options.lines) {
+            var line = g.options.lines[key];
+
             var x = 0;
             var pointsArr = [];
             line.__plotgroup = g.draw_plots.group();
             line.__plotgroup.addClass('chartress__plot chartress__plot--'+(line.classname)+' chartress__style--'+line.classname).attr('plot-name', line.classname);
 
-            _.forEach(line.__plot, function(point){
+            for (var key in line.__plot) {
+                var point = line.__plot[key];
                 var xPos = g.settings.xPoints[x];
                 var yPos = (g.settings.height - ((point / g.settings.yMax) * g.settings.height)) + g.settings.padding.top;
                 pointsArr.push([xPos, yPos]);
                 x++;
-            });
+            };
 
             line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ width: 2 }).addClass('chartress__line chartress__line--'+line.classname);
             if(line.dash){
                 line.__plotsvg.attr('stroke-dasharray', line.dash);
             }
             var rad = line.rad;
-            _.forEach(pointsArr, function(point){
+            for (var key in pointsArr) {
+                var point = pointsArr[key];
                 line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass('chartress__dot chartress__dot--'+(line.classname));
-            });
-        });
+            };
+        };
     };
 
     g.drawLegend = function(){
@@ -205,7 +215,8 @@ window.chartress = function($element, data){
         g.draw_legend.width(g.settings.outweWidth).dmove(posX, posY);
 
         var i = 0;
-        _.forEach(g.options.lines, function(line){
+        for (var key in g.options.lines) {
+            var line = g.options.lines[key];
             line.__legend = g.draw_legend.group().addClass('chartress__legend__row chartress__legend--'+line.classname+' chartress__style--'+line.classname).attr('plot-name', line.classname);
             var string = line.name;
             var text = line.__legend.text(string).font({
@@ -235,7 +246,7 @@ window.chartress = function($element, data){
                 line.__plotgroup.removeClass('chartress__plot--hover');
             });
             i++;
-        })
+        };
     };
 
     g.drawPipes = function(){
@@ -244,7 +255,9 @@ window.chartress = function($element, data){
             labels: g.draw.group().addClass('chartress__pipes__labels'),
             pipes: g.draw.group().addClass('chartress__pipes__pipes')
         };
-        _.forEach(g.options.lines, function(line){
+
+        for (var key in g.options.lines) {
+            var line = g.options.lines[key];
             var proc = ((100 / g.options.lines.length) / 100) * i;
             var space = g.settings.width / g.options.lines.length;
             var xcenter = (proc * g.settings.width) + space - (space/2);
@@ -266,7 +279,7 @@ window.chartress = function($element, data){
             g.draw_pipes.pipes.rect(pipeWidth, pipeHeight).dx(xcenter - (pipeWidth/2) + g.settings.padding.left).dy(g.settings.height - pipeHeight + g.settings.padding.top).addClass('chartress__pipes__pipe');
 
             i++;
-        });
+        };
     };
 
     g.drawPies = function(){
@@ -279,37 +292,41 @@ window.chartress = function($element, data){
         var y = (g.settings.height / 2 - (size /2)) + g.settings.rect.top;
 
         var mask;
-        _.forEach(g.options.lines, function(line) {
-            var lineWidth = size;
-            if (typeof line.width !== 'undefined') {
-                lineWidth = line.width
-            }
-            g.pies[line.classname] = {};
-            g.pies[line.classname].el = g.draw_pie.circle(size);
-            g.pies[line.classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
-                .addClass('chartress__pie')
-                .dx(x).dy(y)
-                .stroke({
-                    width: lineWidth
-                }).rotate(-90);
-            var dia = (2 * Math.PI *(size/2));
-            g.pies[line.classname].el.attr('stroke-dasharray', 0+','+dia);
-            
-            if (line.mask !== false) {
-                mask = g.draw_pie.circle(size).fill({color:'white'}).dx(x).dy(y);
-                g.pies[line.classname].el.maskWith(mask);
-            }
+        for (var key in g.options.lines) {
+            (function(){
+                var line = g.options.lines[key];
 
-            g.pies[line.classname].set = function(nv) {
-                var res = ((nv*dia) / 100);
-                g.pies[line.classname].el.attr('stroke-dasharray', res+','+dia);
-            };
-            setTimeout(function(){
-                g.pies[line.classname].set(line.value);
-                g.pies[line.classname].el.addClass('chartress__pie--' + line.classname);
-            });
-            i++;
-        });
+                var lineWidth = size;
+                if (typeof line.width !== 'undefined') {
+                    lineWidth = line.width
+                }
+                g.pies[line.classname] = {};
+                g.pies[line.classname].el = g.draw_pie.circle(size);
+                g.pies[line.classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
+                    .addClass('chartress__pie')
+                    .dx(x).dy(y)
+                    .stroke({
+                        width: lineWidth
+                    }).rotate(-90);
+                var dia = (2 * Math.PI *(size/2));
+                g.pies[line.classname].el.attr('stroke-dasharray', 0+','+dia);
+                
+                if (line.mask !== false) {
+                    mask = g.draw_pie.circle(size).fill({color:'white'}).dx(x).dy(y);
+                    g.pies[line.classname].el.maskWith(mask);
+                }
+
+                g.pies[line.classname].set = function(nv) {
+                    var res = ((nv*dia) / 100);
+                    g.pies[line.classname].el.attr('stroke-dasharray', res+','+dia);
+                };
+                setTimeout(function(){
+                    g.pies[line.classname].set(line.value);
+                    g.pies[line.classname].el.addClass('chartress__pie--' + line.classname);
+                });
+                i++;
+            })();
+        };
 
         var title = g.options.pie.title || false;
         if (title) {
@@ -343,7 +360,7 @@ window.chartress = function($element, data){
                     family: g.options.graph.fontFamily || 'Helvetica',
                     size: subTitle.size,
                     anchor: 'middle'
-                }).dx(g.settings.width / 2).dy(g.settings.height / 2 + (g.settings.height*0.06));
+                }).dx(g.settings.width / 2).dy(g.settings.height / 2 + (g.settings.height*0.11));
             }
         }
     };
@@ -372,11 +389,11 @@ window.chartress = function($element, data){
         g.drawGraph();
     };
 
-    var sizeCache = [$element.width(), $element.height()];
+    var sizeCache = [el.scrollWidth, el.scrollHeight];
     var to;
 
     SVG.on(window, 'resize', function() {
-        if (sizeCache[0] !== $element.width() || sizeCache[1] !== $element.height()) {
+        if (sizeCache[0] !== el.scrollWidth || sizeCache[1] !== el.scrollHeight) {
             clearTimeout(to);
             to = setTimeout(g.canvasResize, g.options.graph.redrawTimeout || 100);
         }

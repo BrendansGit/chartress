@@ -11,7 +11,6 @@
 		"svg"
 	],
     "dependencies": {
-		"jquery": null,
 		"svg.js": null
 	},
 	"main": "dist/chartress.js"

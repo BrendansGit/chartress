@@ -99,25 +99,27 @@ window.chartress = function($element, data){
 		g.yLabels = g.draw.group().addClass('chartress__labels chartress__labels--yAxis');
 		g.settings.yPoints = [];
 		for (i = 0; i < yPoints; i++) {
-			var proc = 1 - ((i+1) / yPoints);
-			var posY = ((g.settings.height + (g.settings.height * 0.146)) * proc) + g.settings.padding.top;
-			var text = i*g.options.yAxis.markEvery;
-			if (text !== 0) {
+			(function(){
+				var proc = 1 - ((i+1) / yPoints);
+				var posY = ((g.settings.height + (g.settings.height * 0.146)) * proc) + g.settings.padding.top;
+				var text = i*g.options.yAxis.markEvery;
+				if (text !== 0) {
 	
-				var tnode = g.yLabels.text(text.toString())
-					.fill(g.options.yAxis.label.color)
-					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
-						anchor: 'middle',
-						size: 14
-					})
-					.dx(g.settings.rect.left + g.options.yAxis.label.x)
-					.dy(posY)
-					.addClass('chartress__labels__label chartress__labels__label--yAxis');
+					var tnode = g.yLabels.text(text.toString())
+						.fill(g.options.yAxis.label.color)
+						.font({
+							family: g.options.graph.fontFamily || 'Helvetica',
+							anchor: 'middle',
+							size: 14
+						})
+						.dx(g.settings.rect.left + g.options.yAxis.label.x)
+						.dy(posY)
+						.addClass('chartress__labels__label chartress__labels__label--yAxis');
 	
-				tnode.dy((tnode.node.scrollHeight / 2)*-1)
-				g.settings.yPoints.push(posY);
-			};
+					tnode.dy((tnode.node.scrollHeight / 2)*-1)
+					g.settings.yPoints.push(posY);
+				};
+			})();
 		}
 	
 		// draw xaxis
@@ -128,30 +130,32 @@ window.chartress = function($element, data){
 		g.xLabels = g.draw.group().addClass('chartress__labels chartress__labels--xAxis');
 		// todo: make xAxis.markEvery work properly
 		for (i = 0; i <= dateRange; i++) {
-			var time = g.options.xAxis.range.from + i;
-			if (time < 10) {
-				time = '0'+time;
-			}
-			var text = time+':00';
-			var proc = ((i) / (dateRange))
-			var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+			(function(){
+				var time = g.options.xAxis.range.from + i;
+				if (time < 10) {
+					time = '0'+time;
+				}
+				var text = time+':00';
+				var proc = ((i) / (dateRange))
+				var posX = ((g.settings.width) * proc) + g.settings.padding.left;
 	
-			if (i%g.options.xAxis.markEvery === 0) {
+				if (i%g.options.xAxis.markEvery === 0) {
 	
-				g.xLabels.text(text)
-					.fill(g.options.xAxis.label.color)
-					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
-						anchor: 'middle',
-						size: 14
-					})
-					.dx(posX)
-					.dy(g.settings.rect.bottom + g.options.xAxis.label.y)
-					.addClass('chartress__labels__label chartress__labels--xAxis');
+					g.xLabels.text(text)
+						.fill(g.options.xAxis.label.color)
+						.font({
+							family: g.options.graph.fontFamily || 'Helvetica',
+							anchor: 'middle',
+							size: 14
+						})
+						.dx(posX)
+						.dy(g.settings.rect.bottom + g.options.xAxis.label.y)
+						.addClass('chartress__labels__label chartress__labels--xAxis');
 	
-			}
+				}
 	
-			g.settings.xPoints.push(posX);
+				g.settings.xPoints.push(posX);
+			})();
 		}
 	};
 	g.drawLines = function(){
@@ -165,11 +169,13 @@ window.chartress = function($element, data){
 			line.__plotgroup.addClass('chartress__plot chartress__plot--'+(line.classname)).attr('plot-name', line.classname);
 	
 			for (var key in line.__plot) {
-				var point = line.__plot[key];
-				var xPos = g.settings.xPoints[x];
-				var yPos = (g.settings.height - ((point / g.settings.yMax) * g.settings.height)) + g.settings.padding.top;
-				pointsArr.push([xPos, yPos]);
-				x++;
+				(function(){
+					var point = line.__plot[key];
+					var xPos = g.settings.xPoints[x];
+					var yPos = (g.settings.height - ((point / g.settings.yMax) * g.settings.height)) + g.settings.padding.top;
+					pointsArr.push([xPos, yPos]);
+					x++;
+				})();
 			};
 	
 			line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ width: 2 }).addClass('chartress__line chartress__line--'+line.classname);
@@ -178,8 +184,10 @@ window.chartress = function($element, data){
 			}
 			var rad = line.rad;
 			for (var key in pointsArr) {
-				var point = pointsArr[key];
-				line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass('chartress__dot chartress__dot--'+(line.classname));
+				(function(){
+					var point = pointsArr[key];
+					line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass('chartress__dot chartress__dot--'+(line.classname));
+				})();
 			};
 		};
 	};
@@ -213,36 +221,38 @@ window.chartress = function($element, data){
 	
 		var i = 0;
 		for (var key in g.options.lines) {
-			var line = g.options.lines[key];
-			line.__legend = g.draw_legend.group().addClass('chartress__legend__row chartress__legend--'+line.classname).attr('plot-name', line.classname);
-			var string = line.name;
-			var text = line.__legend.text(string).font({
-				family: g.options.graph.fontFamily || 'Helvetica'
-			});
-			var tx = (text.node.scrollWidth + 40)*-1;
-			var ty = ((text.node.scrollHeight)*i) * 1.1;
-			text.dx(tx);
-			text.dy(ty);
-			var rad = line.rad;
-			var compensate = (text.node.scrollHeight * 1.1) * 0.2;
-			var line_path = [
-				[-30,pY+(text.node.scrollHeight-compensate) + ty],
-				[0,pY+(text.node.scrollHeight-compensate) + ty],
-			];
-			var polyline = line.__legend.polyline(line_path).fill('none').stroke({ width: 2 }).addClass('chartress__line chartress__legend__line chartress__legend__line--'+line.classname);
-			if(line.dash){
-				polyline.attr('stroke-dasharray', line.dash);
-			}
-			line.__legend.circle(rad).dx(0 - rad/2).dy((pY + (text.node.scrollHeight-compensate) + ty) - rad/2).addClass('chartress__dot chartress__legend__dot--'+(line.classname));
+			(function(){
+				var line = g.options.lines[key];
+				line.__legend = g.draw_legend.group().addClass('chartress__legend__row chartress__legend--'+line.classname).attr('plot-name', line.classname);
+				var string = line.name;
+				var text = line.__legend.text(string).font({
+					family: g.options.graph.fontFamily || 'Helvetica'
+				});
+				var tx = (text.node.scrollWidth + 40)*-1;
+				var ty = ((text.node.scrollHeight)*i) * 1.1;
+				text.dx(tx);
+				text.dy(ty);
+				var rad = line.rad;
+				var compensate = (text.node.scrollHeight * 1.1) * 0.2;
+				var line_path = [
+					[-30,pY+(text.node.scrollHeight-compensate) + ty],
+					[0,pY+(text.node.scrollHeight-compensate) + ty],
+				];
+				var polyline = line.__legend.polyline(line_path).fill('none').stroke({ width: 2 }).addClass('chartress__line chartress__legend__line chartress__legend__line--'+line.classname);
+				if(line.dash){
+					polyline.attr('stroke-dasharray', line.dash);
+				}
+				line.__legend.circle(rad).dx(0 - rad/2).dy((pY + (text.node.scrollHeight-compensate) + ty) - rad/2).addClass('chartress__dot chartress__legend__dot--'+(line.classname));
 	
-			line.__legend.mouseover(function(){
-				var t = this;
-				// console.log(line);
-				line.__plotgroup.addClass('chartress__plot--hover');
-			}).mouseout(function(){
-				line.__plotgroup.removeClass('chartress__plot--hover');
-			});
-			i++;
+				line.__legend.mouseover(function(){
+					var t = this;
+					// console.log(line);
+					line.__plotgroup.addClass('chartress__plot--hover');
+				}).mouseout(function(){
+					line.__plotgroup.removeClass('chartress__plot--hover');
+				});
+				i++;
+			})();
 		};
 	};
 	g.drawPipes = function(){
@@ -253,28 +263,30 @@ window.chartress = function($element, data){
 		};
 	
 		for (var key in g.options.lines) {
-			var line = g.options.lines[key];
-			var proc = ((100 / g.options.lines.length) / 100) * i;
-			var space = g.settings.width / g.options.lines.length;
-			var xcenter = (proc * g.settings.width) + space - (space/2);
-			var pipeWidth = g.options.pipes.width || 10;
-			var pipeHeight = (line.value / g.settings.largestPipe) * g.settings.height;
-			var corr_label_y = g.options.pipes.labels.y || 0;
+			(function(){
+				var line = g.options.lines[key];
+				var proc = ((100 / g.options.lines.length) / 100) * i;
+				var space = g.settings.width / g.options.lines.length;
+				var xcenter = (proc * g.settings.width) + space - (space/2);
+				var pipeWidth = g.options.pipes.width || 10;
+				var pipeHeight = (line.value / g.settings.largestPipe) * g.settings.height;
+				var corr_label_y = g.options.pipes.labels.y || 0;
 	
-			g.draw_pipes.labels.text(line.name)
-					.fill('#000')
-					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
-						anchor: 'middle',
-						size: g.options.pipes.labels.fontsize || 14
-					})
-					.dx(xcenter + g.settings.padding.left)
-					.dy(g.settings.height + corr_label_y + g.settings.padding.top)
-					.addClass('chartress__pipes__label');
+				g.draw_pipes.labels.text(line.name)
+						.fill('#000')
+						.font({
+							family: g.options.graph.fontFamily || 'Helvetica',
+							anchor: 'middle',
+							size: g.options.pipes.labels.fontsize || 14
+						})
+						.dx(xcenter + g.settings.padding.left)
+						.dy(g.settings.height + corr_label_y + g.settings.padding.top)
+						.addClass('chartress__pipes__label');
 	
-			g.draw_pipes.pipes.rect(pipeWidth, pipeHeight).dx(xcenter - (pipeWidth/2) + g.settings.padding.left).dy(g.settings.height - pipeHeight + g.settings.padding.top).addClass('chartress__pipes__pipe');
+				g.draw_pipes.pipes.rect(pipeWidth, pipeHeight).dx(xcenter - (pipeWidth/2) + g.settings.padding.left).dy(g.settings.height - pipeHeight + g.settings.padding.top).addClass('chartress__pipes__pipe');
 	
-			i++;
+				i++;
+			})();
 		};
 	};
 	g.drawPies = function(){

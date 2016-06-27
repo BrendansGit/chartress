@@ -1,23 +1,23 @@
 {
-    "name": "chartress",
-    "version": "0.0.2",
-	"license": "MIT",
-	"authors": [
-		"Brendan Mullins <mail@brendan-mullins.com>"
-	],
-	"keywords": [
-		"charts",
-		"graphs",
-		"svg"
-	],
-    "dependencies": {
-		"svg.js": null
-	},
-	"main": "dist/chartress.js",
-	"ignore": [
-		"package.json",
-		"gulpfile.js",
-		"node_modules",
-		"src"
-	]
+  "name": "chartress",
+  "version": "0.0.2",
+  "license": "MIT",
+  "authors": [
+    "Brendan Mullins <mail@brendan-mullins.com>"
+  ],
+  "keywords": [
+    "charts",
+    "graphs",
+    "svg"
+  ],
+  "dependencies": {
+    "svg.js": "^2.3.2"
+  },
+  "main": "dist/chartress.js",
+  "ignore": [
+    "package.json",
+    "gulpfile.js",
+    "node_modules",
+    "src"
+  ]
 }

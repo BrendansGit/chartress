@@ -313,7 +313,8 @@ window.chartress = function($element, data){
 					.addClass('chartress__pie')
 					.dx(x).dy(y)
 					.stroke({
-						width: lineWidth
+						width: lineWidth,
+						color: '#000'
 					}).rotate(-90);
 				var dia = (2 * Math.PI *(size/2));
 				g.pies[line.classname].el.attr('stroke-dasharray', 0+','+dia);
@@ -342,7 +343,7 @@ window.chartress = function($element, data){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: title.size,
 				anchor: 'middle'
-			}).dx(g.settings.width / 2).dy(g.settings.height / 2);
+			}).dx(g.settings.width / 2).dy(g.settings.outerHeight / 2);
 			if (title.bold) {
 				maintext.font({
 					family: g.options.graph.fontFamily || 'Helvetica',

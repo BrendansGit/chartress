@@ -1,5 +1,5 @@
 # chartress.js
-**warning this project is still in beta** 
+**This project is still in beta** 
 
 9KB minified, Requires [svg.js](http://svgjs.com/)
 

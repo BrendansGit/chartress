@@ -33,7 +33,7 @@ g.drawLegend = function(){
 			line.__legend = g.draw_legend.group().addClass('chartress__legend__row chartress__legend--'+line.classname).attr('plot-name', line.classname);
 			var string = line.name;
 			var text = line.__legend.text(string).font({
-				family: g.options.graph.fontFamily || 'Helvetica'
+				family: 'Helvetica'
 			});
 			var tx = (text.node.scrollWidth + 40)*-1;
 			var ty = ((text.node.scrollHeight)*i) * 1.1;

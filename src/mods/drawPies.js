@@ -52,14 +52,14 @@ g.drawPies = function(){
 			family: g.options.graph.fontFamily || 'Helvetica',
 			size: title.size,
 			anchor: 'middle'
-		}).dx(g.settings.width / 2).dy(g.settings.outerHeight / 2);
+		}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top);
 		if (title.bold) {
 			maintext.font({
 				family: g.options.graph.fontFamily || 'Helvetica',
 				weight: 'bold'
 			});
 		}
-		maintext.dy(maintext.node.scrollHeight*-0.9);
+		maintext.dy(parseInt(getComputedStyle(maintext.node).height)*-0.9);
 
 		var preTitle = title.pre || false;
 		if (preTitle) {
@@ -67,8 +67,8 @@ g.drawPies = function(){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: preTitle.size,
 				anchor: 'middle'
-			}).dx(g.settings.width / 2).dy((g.settings.height/2) - (maintext.node.scrollHeight/2));
-			pretext.dy(pretext.node.scrollHeight*-1.8);
+			}).dx(g.settings.width / 2 + g.settings.padding.top).dy((g.settings.height/2 + g.settings.padding.left) - (parseInt(getComputedStyle(maintext.node).height)/2));
+			pretext.dy(parseInt(getComputedStyle(maintext.node).height)*-1.8);
 		}
 
 		var subTitle = title.sub || false;
@@ -77,7 +77,7 @@ g.drawPies = function(){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: subTitle.size,
 				anchor: 'middle'
-			}).dx(g.settings.width / 2).dy(g.settings.height / 2 + (g.settings.height*0.11));
+			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + (g.settings.height*0.11) + g.settings.padding.top);
 		}
 	}
 };

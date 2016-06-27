@@ -3,7 +3,8 @@ var uglify = require('gulp-uglify');
 var pump = require('pump');
 var include = require('gulp-include');
 var rename = require('gulp-rename');
- 
+var watch = require('gulp-watch');
+
 gulp.task('scripts', function() {
   console.log('-- gulp is running task \'scripts\'');
  
@@ -23,4 +24,11 @@ gulp.task('compress', function () {
 	]);
 });
 
-gulp.task('default', ['scripts', 'compress']);
+gulp.task('watch', function () {
+	// Endless stream mode 
+    // return watch('src/**/*.js', ['scripts', 'compress']);
+    gulp.watch('src/**/*.js', ['build']);
+});
+
+gulp.task('build', ['scripts', 'compress']);
+gulp.task('default', ['build', 'watch']);

@@ -7,8 +7,8 @@ g.drawGraph = function() {
 		g.drawLines();
 		g.drawLegend();
 	}
-	if (g.settings.type === 'pipes') {
-		g.drawPipes();
+	if (g.settings.type === 'column') {
+		g.drawColumns();
 	}
 	if (g.settings.type === 'pie') {
 		g.drawPies();

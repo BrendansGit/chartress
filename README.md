@@ -1,7 +1,7 @@
 # chartress.js
-**This project is still in beta** 
+**This project is still in alpha!!** 
 
-9KB minified, Requires [svg.js](http://svgjs.com/)
+Requires [svg.js](http://svgjs.com/)
 
 
 ## Usage

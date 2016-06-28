@@ -13,7 +13,7 @@
 		h2 {
 			color: #fff;
 		}
-		div {
+		div , canvas{
 			margin: 0 auto 40px;
 			width: 750px; 
 			max-width: 100%; 
@@ -28,9 +28,25 @@
 	
 	<h2>Line Chart</h2>
 	<div class="linechart"></div>
+	<h2>Copy to Canvas</h2>
+	<canvas id="c" width="750" height="350"></canvas>
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(event) { 
-		chartress(document.querySelector('.linechart'), linechart);
+		var chart = chartress(document.querySelector('.linechart'), linechart);
+
+		// draw to canvas
+		var svg = document.querySelector('.linechart svg');
+		var img = new Image();
+		var canvas = document.querySelector('#c');
+
+		var xml = new XMLSerializer().serializeToString(svg);
+		var svg64 = btoa(xml);
+		var b64Start = 'data:image/svg+xml;base64,';
+		var image64 = b64Start + svg64;
+
+		img.src = image64;
+		canvas.getContext('2d').drawImage(img, 0, 0);
+
 	});
 
 	var linechart = {
@@ -50,6 +66,7 @@
 			}
 		]
 	}
+
 	</script>
 
 	<h2>Column Chart</h2>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Chartress by jsnanigans</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Chartress</h1>
+      <h2 class="project-tagline">Lightweight javascript SVG Chart library based on svg.js</h2>
+      <a href="https://github.com/jsnanigans/chartress" class="btn">View on GitHub</a>
+      <a href="https://github.com/jsnanigans/chartress/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/jsnanigans/chartress/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="chartressjs" class="anchor" href="#chartressjs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>chartress.js</h1>
+
+<p><strong>This project is still in beta</strong> </p>
+
+<p>9KB minified, Requires <a href="http://svgjs.com/">svg.js</a></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h4>
+<a id="download-chartress" class="anchor" href="#download-chartress" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download chartress</h4>
+
+<div class="highlight highlight-source-shell"><pre>bower install chartress --save</pre></div>
+
+<h4>
+<a id="include-chartress-into-your-project" class="anchor" href="#include-chartress-into-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include chartress into your project</h4>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/bower_components/chartress/dist/chartress.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<h4>
+<a id="prepare-some-html" class="anchor" href="#prepare-some-html" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prepare some html</h4>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>chartress<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
+
+<h4>
+<a id="run-chartress" class="anchor" href="#run-chartress" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run chartress</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> element <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-en">querySelector</span>(<span class="pl-s"><span class="pl-pds">'</span>.chartress<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> graph <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">chartress</span>(element, data);</pre></div>
+
+<h2>
+<a id="example-data" class="anchor" href="#example-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example data</h2>
+
+<h3>
+<a id="line-chart" class="anchor" href="#line-chart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Line Chart:</h3>
+
+<h4>
+<a id="code" class="anchor" href="#code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>code:</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> linechart <span class="pl-k">=</span> {
+    lines<span class="pl-k">:</span> [
+        {
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Red<span class="pl-pds">'</span></span>,
+            color<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>red<span class="pl-pds">'</span></span>,
+            plot<span class="pl-k">:</span> [<span class="pl-c1">0</span>, <span class="pl-c1">10</span>, <span class="pl-c1">50</span>, <span class="pl-c1">80</span>, <span class="pl-c1">53</span>, <span class="pl-c1">20</span>, <span class="pl-c1">25</span>, <span class="pl-c1">80</span>, <span class="pl-c1">70</span>, <span class="pl-c1">5</span>, <span class="pl-c1">40</span>],
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Black<span class="pl-pds">'</span></span>,
+            plot<span class="pl-k">:</span> [<span class="pl-c1">40</span>, <span class="pl-c1">20</span>, <span class="pl-c1">1</span>, <span class="pl-c1">50</span>, <span class="pl-c1">60</span>, <span class="pl-c1">70</span>, <span class="pl-c1">100</span>, <span class="pl-c1">70</span>, <span class="pl-c1">40</span>, <span class="pl-c1">30</span>, <span class="pl-c1">10</span>],
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gray<span class="pl-pds">'</span></span>,
+            dash<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>10,5<span class="pl-pds">'</span></span>,
+            color<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>gray<span class="pl-pds">'</span></span>,
+            plot<span class="pl-k">:</span> [<span class="pl-c1">4</span>, <span class="pl-c1">6</span>, <span class="pl-c1">20</span>, <span class="pl-c1">18</span>, <span class="pl-c1">24</span>, <span class="pl-c1">8</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">20</span>, <span class="pl-c1">10</span>, <span class="pl-c1">5</span>],
+        }
+    ]
+}</pre></div>
+
+<h5>
+<a id="result" class="anchor" href="#result" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>result:</h5>
+
+<p><img src="https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/line-chart.png" alt="ScreenShot"></p>
+
+<h3>
+<a id="column-chart" class="anchor" href="#column-chart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Column Chart:</h3>
+
+<h4>
+<a id="code-1" class="anchor" href="#code-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>code:</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> coumnchart <span class="pl-k">=</span> {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>column<span class="pl-pds">'</span></span>,
+    lines<span class="pl-k">:</span> [
+        {
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>MO<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">40</span> 
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TU<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">60</span>
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>WE<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">30</span>
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TH<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">60</span>
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>FR<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">90</span>
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SA<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">22</span>
+        },{
+            name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SU<span class="pl-pds">'</span></span>,
+            value<span class="pl-k">:</span> <span class="pl-c1">15</span>
+        }
+    ]
+};</pre></div>
+
+<h5>
+<a id="result-1" class="anchor" href="#result-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>result:</h5>
+
+<p><img src="https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/column-chart.png" alt="ScreenShot"></p>
+
+<h3>
+<a id="pie-chart" class="anchor" href="#pie-chart" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pie Chart:</h3>
+
+<h4>
+<a id="code-2" class="anchor" href="#code-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>code:</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> piechart <span class="pl-k">=</span> {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>pie<span class="pl-pds">'</span></span>,
+    lines<span class="pl-k">:</span> [
+        {
+            value<span class="pl-k">:</span> <span class="pl-c1">100</span>
+        },
+        {
+            value<span class="pl-k">:</span> <span class="pl-c1">61</span>,
+            color<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>#1b860b<span class="pl-pds">'</span></span>
+        }
+    ]
+};</pre></div>
+
+<h5>
+<a id="result-2" class="anchor" href="#result-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>result:</h5>
+
+<p><img src="https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/pie-chart.png" alt="ScreenShot"></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/jsnanigans/chartress">Chartress</a> is maintained by <a href="https://github.com/jsnanigans">jsnanigans</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>

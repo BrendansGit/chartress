@@ -49,18 +49,22 @@ window.chartress = function($element, data){
 		if (typeof g.options.pie.title === 'undefined')
 			g.options.pie.title = {};
 		
-		
+		var g_st = function(el){
+			return getComputedStyle(el);
+		}
 		var maxLength = g.options.xAxis.maxRangeLength || Infinity;
 		
 		g.settings = {
 			yMax: 0,
+			fontSize: g.options.graph.fontFamily || 'Helvetica',
+			class: g.options.graph.class_prefix || 'chartress',
 			padding: {
-				top: g.options.graph.padding.top || 10,
-				right: g.options.graph.padding.right || 8,
-				bottom: g.options.graph.padding.bottom || 25,
-				left: g.options.graph.padding.left || 35
+				top: g.options.graph.padding.top || 0,
+				right: g.options.graph.padding.right || 0,
+				bottom: g.options.graph.padding.bottom || 0,
+				left: g.options.graph.padding.left || 0
 			},
-			type: g.options.type || 'normal',
+			type: g.options.type || 'line',
 			yAxis: {
 				markEvery: g.options.yAxis.markEvery || 1,
 				label: {
@@ -109,8 +113,25 @@ window.chartress = function($element, data){
 				}
 			}
 		};
+		// if (true) {}
+		if(g.settings.type === 'line') {
+			g.settings.padding = {
+				top: g.options.graph.padding.top || 10,
+				right: g.options.graph.padding.right || 8,
+				bottom: g.options.graph.padding.bottom || 25,
+				left: g.options.graph.padding.left || 35
+			}
+		}
+		if(g.settings.type === 'column') {
+			g.settings.padding = {
+				top: g.options.graph.padding.top || 0,
+				right: g.options.graph.padding.right || 0,
+				bottom: g.options.graph.padding.bottom || 20,
+				left: g.options.graph.padding.left || 0
+			}
+		}
 	g.setBounds = function() {
-		if (g.settings.type === 'normal') {
+		if (g.settings.type === 'line') {
 			var longest = 0;
 			for (var key in g.options.lines) {
 				(function(){
@@ -154,9 +175,9 @@ window.chartress = function($element, data){
 			}
 		}
 	
-		g.settings.outweWidth = parseInt(getComputedStyle(el).width);
-		g.settings.width = g.settings.outweWidth - g.settings.padding.right - g.settings.padding.left;
-		g.settings.outerHeight = parseInt(getComputedStyle(el).height);
+		g.settings.outerWidth = parseInt(g_st(el).width);
+		g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
+		g.settings.outerHeight = parseInt(g_st(el).height);
 		g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
 	
 		g.settings.rect = {
@@ -179,7 +200,7 @@ window.chartress = function($element, data){
 				yPoints.push(i);
 			}
 		}
-		g.yLabels = g.draw.group().addClass('chartress__labels chartress__labels--yAxis');
+		g.yLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--yAxis');
 		g.settings.yPoints = [];
 		for (i = 0; i < yPoints.length; i++) {
 			(function(){
@@ -193,15 +214,15 @@ window.chartress = function($element, data){
 					var tnode = g.yLabels.text(text.toString())
 						.fill(g.settings.yAxis.label.color)
 						.font({
-							family: g.options.graph.fontFamily || 'Helvetica',
+							family: g.settings.fontFamily,
 							size: fontSize
 						})
 						.dx(g.settings.rect.left + g.settings.yAxis.label.x)
 						.dy(posY)
-						.addClass('chartress__labels__label chartress__labels__label--yAxis');
+						.addClass(g.settings.class+'__labels__label chartress__labels__label--yAxis');
 	
-					tnode.dx((parseInt(getComputedStyle(tnode.node).width))*-1 - 10);
-					tnode.dy((parseInt(getComputedStyle(tnode.node).height)/2)*-1);
+					tnode.dx((parseInt(g_st(tnode.node).width))*-1 - 10);
+					tnode.dy((parseInt(g_st(tnode.node).height)/2)*-1);
 					g.settings.yPoints.push(posY);
 				};
 			})();
@@ -211,7 +232,7 @@ window.chartress = function($element, data){
 			dateRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
 	
 		g.settings.xPoints = [];
-		g.xLabels = g.draw.group().addClass('chartress__labels chartress__labels--xAxis');
+		g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 		// todo: make xAxis.markEvery work properly
 		for (i = 0; i <= dateRange; i++) {
 			(function(){
@@ -224,13 +245,13 @@ window.chartress = function($element, data){
 					g.xLabels.text(text)
 						.fill(g.settings.xAxis.label.color)
 						.font({
-							family: g.options.graph.fontFamily || 'Helvetica',
+							family: g.settings.fontFamily,
 							anchor: 'middle',
 							size: 14
 						})
 						.dx(posX)
 						.dy(g.settings.rect.bottom + g.settings.xAxis.label.y)
-						.addClass('chartress__labels__label chartress__labels--xAxis');
+						.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
 	
 				}
 	
@@ -239,7 +260,7 @@ window.chartress = function($element, data){
 		}
 	};
 	g.drawLines = function(){
-		g.draw_plots = g.draw.group().addClass('chartress__plots');
+		g.draw_plots = g.draw.group().addClass(g.settings.class+'__plots');
 		for (var key in g.options.lines) {
 			var line = g.options.lines[key];
 			var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
@@ -248,7 +269,7 @@ window.chartress = function($element, data){
 			var x = 0;
 			var pointsArr = [];
 			line.__plotgroup = g.draw_plots.group();
-			line.__plotgroup.addClass('chartress__plot chartress__plot--'+(classname)).attr('plot-name', classname);
+			line.__plotgroup.addClass(g.settings.class+'__plot chartress__plot--'+(classname)).attr('plot-name', classname);
 	
 			for (var key in line.__plot) {
 				(function(){
@@ -261,7 +282,7 @@ window.chartress = function($element, data){
 				})();
 			};
 	
-			line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ color: color, width: width }).addClass('chartress__line chartress__line--'+classname);
+			line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ color: color, width: width }).addClass(g.settings.class+'__line chartress__line--'+classname);
 			if(line.dash){
 				line.__plotsvg.attr('stroke-dasharray', line.dash);
 			}
@@ -269,7 +290,7 @@ window.chartress = function($element, data){
 			for (var key in pointsArr) {
 				(function(){
 					var point = pointsArr[key];
-					line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass('chartress__dot chartress__dot--'+(classname)).stroke({
+					line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass(g.settings.class+'__dot chartress__dot--'+(classname)).stroke({
 						color: color,
 						width: width
 					}).fill('white');
@@ -278,13 +299,13 @@ window.chartress = function($element, data){
 		};
 	};
 	g.drawLegend = function(){
-		g.draw_legend = g.draw.group().addClass('chartress__legend').font({
-			family: g.options.graph.fontFamily || 'Helvetica',
-			size: 13
+		g.draw_legend = g.draw.group().addClass(g.settings.class+'__legend').font({
+			family: g.settings.fontFamily,
+			size: 12
 		});
 	
 		var pX = 0;
-		var posX = (g.settings.outweWidth/100) * g.settings.legend.x;
+		var posX = (g.settings.outerWidth/100) * g.settings.legend.x;
 		if (g.settings.legend.x > 50) {
 			posX -= g.settings.legend.padding.right;
 			pX = g.settings.legend.padding.right*-1;
@@ -303,7 +324,7 @@ window.chartress = function($element, data){
 			pY = g.settings.legend.padding.bottom*-1;
 		}
 	
-		g.draw_legend.width(g.settings.outweWidth).dmove(posX, posY);
+		g.draw_legend.width(g.settings.outerWidth).dmove(posX, posY);
 	
 		var i = 0;
 		for (var key in g.options.lines) {
@@ -313,20 +334,20 @@ window.chartress = function($element, data){
 					var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 					var color = line.color || 'black';
 					var width = line.width || 2;
-					line.__legend = g.draw_legend.group().addClass('chartress__legend__row chartress__legend--'+classname).attr('plot-name', classname);
+					line.__legend = g.draw_legend.group().addClass(g.settings.class+'__legend__row chartress__legend--'+classname).attr('plot-name', classname);
 					var string = line.name;
 					var text = line.__legend.text(string)
 						.fill(color)
 						.font({
-							family: g.options.graph.fontFamily || 'Helvetica'
+							family: g.settings.fontFamily
 						});
-					var tx = (parseInt(getComputedStyle(text.node).width) + 40)*-1 - 5;
-					var ty = ((parseInt(getComputedStyle(text.node).height))*i) - 9;
+					var tx = (parseInt(g_st(text.node).width) + 40)*-1 - 5;
+					var ty = ((parseInt(g_st(text.node).height))*i) - 9;
 					text.dx(tx);
 					text.dy(ty);
 					var rad = line.rad || 6;
-					var comp = (parseInt(getComputedStyle(text.node).height)/2);
-					var pathY = (parseInt(getComputedStyle(text.node).height))*i + comp;
+					var comp = (parseInt(g_st(text.node).height)/2 + 1);
+					var pathY = (parseInt(g_st(text.node).height))*i + comp;
 					var line_path = [
 						[-35,pathY],
 						[-5,pathY],
@@ -334,7 +355,7 @@ window.chartress = function($element, data){
 					var polyline = line.__legend.polyline(line_path)
 						.fill('none')
 						.stroke({ color: color, width: width })
-						.addClass('chartress__line chartress__legend__line chartress__legend__line--'+classname);
+						.addClass(g.settings.class+'__line chartress__legend__line chartress__legend__line--'+classname);
 					if(line.dash){
 						polyline.attr('stroke-dasharray', line.dash);
 					}
@@ -343,13 +364,13 @@ window.chartress = function($element, data){
 						.fill('white')
 						.dx(0 - rad/2 -5)
 						.dy(pathY - rad/2)
-						.addClass('chartress__dot chartress__legend__dot--'+(classname));
+						.addClass(g.settings.class+'__dot chartress__legend__dot--'+(classname));
 	
 					line.__legend.mouseover(function(){
 						var t = this;
-						line.__plotgroup.addClass('chartress__plot--hover');
+						line.__plotgroup.addClass(g.settings.class+'__plot--hover');
 					}).mouseout(function(){
-						line.__plotgroup.removeClass('chartress__plot--hover');
+						line.__plotgroup.removeClass(g.settings.class+'__plot--hover');
 					});
 					i++;
 				}
@@ -359,8 +380,8 @@ window.chartress = function($element, data){
 	g.drawColumns = function(){
 		var i = 0;
 		g.draw_columns = {
-			labels: g.draw.group().addClass('chartress__columns__labels'),
-			columns: g.draw.group().addClass('chartress__columns__columns')
+			labels: g.draw.group().addClass(g.settings.class+'__columns__labels'),
+			columns: g.draw.group().addClass(g.settings.class+'__columns__columns')
 		};
 	
 		for (var key in g.options.lines) {
@@ -376,15 +397,15 @@ window.chartress = function($element, data){
 				g.draw_columns.labels.text(line.name)
 						.fill('#000')
 						.font({
-							family: g.options.graph.fontFamily || 'Helvetica',
+							family: g.settings.fontFamily,
 							anchor: 'middle',
 							size: g.settings.columns.labels.fontsize || 14
 						})
 						.dx(xcenter + g.settings.padding.left)
 						.dy(g.settings.height + corr_label_y + g.settings.padding.top)
-						.addClass('chartress__columns__label');
+						.addClass(g.settings.class+'__columns__label');
 	
-				g.draw_columns.columns.rect(columnWidth, columnHeight).dx(xcenter - (columnWidth/2) + g.settings.padding.left).dy(g.settings.height - columnHeight + g.settings.padding.top).addClass('chartress__columns__column');
+				g.draw_columns.columns.rect(columnWidth, columnHeight).dx(xcenter - (columnWidth/2) + g.settings.padding.left).dy(g.settings.height - columnHeight + g.settings.padding.top).addClass(g.settings.class+'__columns__column');
 	
 				i++;
 			})();
@@ -394,18 +415,44 @@ window.chartress = function($element, data){
 		var i = 0;
 		g.pies = {};
 	
-		g.draw_pie = g.draw.group().addClass('chartress__pies');
+		g.draw_pie = g.draw.group().addClass(g.settings.class+'__pies');
 		var size = (g.settings.width < g.settings.height ? g.settings.width : g.settings.height);
 		var x = (g.settings.width / 2 - (size /2)) + g.settings.rect.left;
 		var y = (g.settings.height / 2 - (size /2)) + g.settings.rect.top;
+	
+		var total = g.options.pie.total || 'count';
+		var filled = 0;
+	
+		if (total === 'count') {
+			total = 0;
+			for (var key in g.options.lines) {
+				var line = g.options.lines[key];
+				total+=line.value;
+			}
+		}
 	
 		var mask;
 		for (var key in g.options.lines) {
 			(function(){
 				var line = g.options.lines[key];
 	
-				var classname = line.classname || 'noclass-'+i;
+				var filledProc = 0;
+				var rotate = -90 + (filledProc);
+				if (typeof line.position === 'number') {
+					if (line.position > 1) {
+						line.position = line.position / 100;
+					}
+					filledProc = line.position * 360;
+				} else if (filled !== 0) {
+					filledProc = (filled/total) * 360;
+				}
 	
+				if (typeof line.position !== 'number') {
+					filled += line.value;
+				}
+				rotate = -90 + (filledProc);
+				
+				var classname = line.classname || 'noclass-'+i;
 				var lineWidth = size;
 				if (typeof line.width !== 'undefined') {
 					lineWidth = line.width
@@ -413,14 +460,17 @@ window.chartress = function($element, data){
 				g.pies[classname] = {};
 				g.pies[classname].el = g.draw_pie.circle(size);
 				g.pies[classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
-					.addClass('chartress__pie')
+					.addClass(g.settings.class+'__pie')
 					.dx(x).dy(y)
 					.stroke({
 						width: lineWidth,
 						color: line.color || '#aaa'
-					}).rotate(-90);
+					});
+	
 				var dia = (2 * Math.PI *(size/2));
 				g.pies[classname].el.attr('stroke-dasharray', 0+','+dia);
+	
+				g.pies[classname].el.rotate(rotate);
 				
 				if (line.mask !== false) {
 					mask = g.draw_pie.circle(size).fill({color:'white'}).dx(x).dy(y);
@@ -428,12 +478,12 @@ window.chartress = function($element, data){
 				}
 	
 				g.pies[classname].set = function(nv) {
-					var res = ((nv*dia) / 100);
+					var res = ((nv*dia) / total);
 					g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
 				};
 				setTimeout(function(){
 					g.pies[classname].set(line.value);
-					g.pies[classname].el.addClass('chartress__pie--' + classname);
+					g.pies[classname].el.addClass(g.settings.class+'__pie--' + classname);
 				});
 				i++;
 			})();
@@ -441,23 +491,23 @@ window.chartress = function($element, data){
 	
 		var title = g.settings.pie.title || false;
 		if (title.text !== false) {
-			g.draw_pie_title = g.draw_pie.group().addClass('chartress__pie__title');
-			var maintext = g.draw_pie_title.text(title.text).addClass('chartress__pie__title--main').font({
-				family: g.options.graph.fontFamily || 'Helvetica',
+			g.draw_pie_title = g.draw_pie.group().addClass(g.settings.class+'__pie__title');
+			var maintext = g.draw_pie_title.text(title.text).addClass(g.settings.class+'__pie__title--main').font({
+				family: g.settings.fontFamily,
 				size: title.size,
 				anchor: 'middle',
 			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top - (title.size * 0.9));
 			if (title.bold) {
 				maintext.font({
-					family: g.options.graph.fontFamily || 'Helvetica',
+					family: g.settings.fontFamily,
 					weight: 'bold'
 				});
 			}
 	
 			var preTitle = title.pre || false;
 			if (preTitle) {
-				pretext = g.draw_pie_title.text(preTitle.text).addClass('chartress__pie__title--pre').font({
-					family: g.options.graph.fontFamily || 'Helvetica',
+				pretext = g.draw_pie_title.text(preTitle.text).addClass(g.settings.class+'__pie__title--pre').font({
+					family: g.settings.fontFamily,
 					size: preTitle.size,
 					anchor: 'middle'
 				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) - (title.size/2) - (preTitle.size) - 5 + g.settings.padding.top);
@@ -465,8 +515,8 @@ window.chartress = function($element, data){
 	
 			var subTitle = title.sub || false;
 			if (subTitle) {
-				subText = g.draw_pie_title.text(subTitle.text).addClass('chartress__pie__title--sub').font({
-					family: g.options.graph.fontFamily || 'Helvetica',
+				subText = g.draw_pie_title.text(subTitle.text).addClass(g.settings.class+'__pie__title--sub').font({
+					family: g.settings.fontFamily,
 					size: subTitle.size,
 					anchor: 'middle'
 				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) + (title.size/2.5) + g.settings.padding.top);
@@ -477,7 +527,7 @@ window.chartress = function($element, data){
 		g.clear();
 		g.setBounds();
 	
-		if (g.settings.type === 'normal') {
+		if (g.settings.type === 'line') {
 			g.drawLabels();
 			g.drawLines();
 			g.drawLegend();
@@ -494,15 +544,30 @@ window.chartress = function($element, data){
 		g.drawGraph();
 	};
 	
-	var sizeCache = [parseInt(getComputedStyle(el).width), parseInt(getComputedStyle(el).height)];
+	var sizeCache = [parseInt(g_st(el).width), parseInt(g_st(el).height)];
 	var to;
 	
 	SVG.on(window, 'resize', function() {
-		if (sizeCache[0] !== parseInt(getComputedStyle(el).width) || sizeCache[1] !== parseInt(getComputedStyle(el).height)) {
+		if (sizeCache[0] !== parseInt(g_st(el).width) || sizeCache[1] !== parseInt(g_st(el).height)) {
 			clearTimeout(to);
 			to = setTimeout(g.canvasResize, g.options.graph.redrawTimeout || 0);
 		}
 	});
+	g.drawToCanvas = function($canvas){
+		var svg = $element.querySelector('svg');
+		var ctx = $canvas.getContext('2d');
+		ctx.canvas.width = g.settings.outerWidth;
+		ctx.canvas.height = g.settings.outerHeight;
+	
+		var img = new Image();
+		var xml = new XMLSerializer().serializeToString(svg);
+		var svg64 = btoa(xml);
+		var b64Start = 'data:image/svg+xml;base64,';
+		var image64 = b64Start + svg64;
+	
+		img.src = image64;
+		ctx.drawImage(img, 0, 0);
+	};
 
 	g.drawGraph();
 

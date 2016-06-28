@@ -8,7 +8,7 @@ g.drawLabels = function() {
 			yPoints.push(i);
 		}
 	}
-	g.yLabels = g.draw.group().addClass('chartress__labels chartress__labels--yAxis');
+	g.yLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--yAxis');
 	g.settings.yPoints = [];
 	for (i = 0; i < yPoints.length; i++) {
 		(function(){
@@ -22,15 +22,15 @@ g.drawLabels = function() {
 				var tnode = g.yLabels.text(text.toString())
 					.fill(g.settings.yAxis.label.color)
 					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
+						family: g.settings.fontFamily,
 						size: fontSize
 					})
 					.dx(g.settings.rect.left + g.settings.yAxis.label.x)
 					.dy(posY)
-					.addClass('chartress__labels__label chartress__labels__label--yAxis');
+					.addClass(g.settings.class+'__labels__label chartress__labels__label--yAxis');
 
-				tnode.dx((parseInt(getComputedStyle(tnode.node).width))*-1 - 10);
-				tnode.dy((parseInt(getComputedStyle(tnode.node).height)/2)*-1);
+				tnode.dx((parseInt(g_st(tnode.node).width))*-1 - 10);
+				tnode.dy((parseInt(g_st(tnode.node).height)/2)*-1);
 				g.settings.yPoints.push(posY);
 			};
 		})();
@@ -40,7 +40,7 @@ g.drawLabels = function() {
 		dateRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
 
 	g.settings.xPoints = [];
-	g.xLabels = g.draw.group().addClass('chartress__labels chartress__labels--xAxis');
+	g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 	// todo: make xAxis.markEvery work properly
 	for (i = 0; i <= dateRange; i++) {
 		(function(){
@@ -53,13 +53,13 @@ g.drawLabels = function() {
 				g.xLabels.text(text)
 					.fill(g.settings.xAxis.label.color)
 					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
+						family: g.settings.fontFamily,
 						anchor: 'middle',
 						size: 14
 					})
 					.dx(posX)
 					.dy(g.settings.rect.bottom + g.settings.xAxis.label.y)
-					.addClass('chartress__labels__label chartress__labels--xAxis');
+					.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
 
 			}
 

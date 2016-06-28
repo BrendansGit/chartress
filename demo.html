@@ -29,24 +29,12 @@
 	<h2>Line Chart</h2>
 	<div class="linechart"></div>
 	<h2>Copy to Canvas</h2>
-	<canvas id="c" width="800" height="350"></canvas>
+	<canvas id="canvas"></canvas>
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(event) { 
 		var chart = chartress(document.querySelector('.linechart'), linechart);
 
-		// draw to canvas
-		var svg = document.querySelector('.linechart svg');
-		var img = new Image();
-		var canvas = document.querySelector('#c');
-
-		var xml = new XMLSerializer().serializeToString(svg);
-		var svg64 = btoa(xml);
-		var b64Start = 'data:image/svg+xml;base64,';
-		var image64 = b64Start + svg64;
-
-		img.src = image64;
-		canvas.getContext('2d').drawImage(img, 0, 0);
-
+		chart.drawToCanvas(document.querySelector('#canvas'));
 	});
 
 	var linechart = {
@@ -118,14 +106,72 @@
 		type: 'pie',
 		lines: [
 			{
-				value: 100
+				value: 20,
+				color: '#1b860b'
 			},
 			{
-				value: 61,
-				color: '#1b860b'
+				value: 46,
+				color: 'red'
+			},
+			{
+				value: 40,
+				color: 'orange'
+			},
+			{
+				value: 4,
+				color: 'yellow'
+			},
+			{
+				value: 2,
+				color: 'purple'
+			},
+			{
+				value: 8,
+				color: 'pink'
 			}
 		]
 	};
+
+	</script>
+
+	<h2>Piechart 2</h2>
+	<div class="piechart2"></div>
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) { 
+		chartress(document.querySelector('.piechart2'), piechart2);
+	});
+
+	var piechart2 = {
+			type: 'pie',
+			pie: {
+				total: 100,
+				title: {
+					text: '39:44',
+					size: 45,
+					bold: true,
+					pre: {
+						text: 'Avg. visiting time',
+						size: 14
+					},
+					sub: {
+						text: 'min',
+						size: 14
+					}
+				}
+			},
+			lines: [
+				{
+					value: 100,
+					width: 20,
+					position: 0
+				},{
+					value: 80,
+					classname: 'outline',
+					color: 'orange',
+					width: 50
+				}
+			]
+		};
 
 	</script>
 

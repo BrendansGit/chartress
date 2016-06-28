@@ -1,8 +1,8 @@
 g.drawColumns = function(){
 	var i = 0;
 	g.draw_columns = {
-		labels: g.draw.group().addClass('chartress__columns__labels'),
-		columns: g.draw.group().addClass('chartress__columns__columns')
+		labels: g.draw.group().addClass(g.settings.class+'__columns__labels'),
+		columns: g.draw.group().addClass(g.settings.class+'__columns__columns')
 	};
 
 	for (var key in g.options.lines) {
@@ -18,15 +18,15 @@ g.drawColumns = function(){
 			g.draw_columns.labels.text(line.name)
 					.fill('#000')
 					.font({
-						family: g.options.graph.fontFamily || 'Helvetica',
+						family: g.settings.fontFamily,
 						anchor: 'middle',
 						size: g.settings.columns.labels.fontsize || 14
 					})
 					.dx(xcenter + g.settings.padding.left)
 					.dy(g.settings.height + corr_label_y + g.settings.padding.top)
-					.addClass('chartress__columns__label');
+					.addClass(g.settings.class+'__columns__label');
 
-			g.draw_columns.columns.rect(columnWidth, columnHeight).dx(xcenter - (columnWidth/2) + g.settings.padding.left).dy(g.settings.height - columnHeight + g.settings.padding.top).addClass('chartress__columns__column');
+			g.draw_columns.columns.rect(columnWidth, columnHeight).dx(xcenter - (columnWidth/2) + g.settings.padding.left).dy(g.settings.height - columnHeight + g.settings.padding.top).addClass(g.settings.class+'__columns__column');
 
 			i++;
 		})();

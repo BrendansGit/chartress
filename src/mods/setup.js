@@ -47,18 +47,22 @@ g.clear = function(){
 	if (typeof g.options.pie.title === 'undefined')
 		g.options.pie.title = {};
 	
-	
+	var g_st = function(el){
+		return getComputedStyle(el);
+	}
 	var maxLength = g.options.xAxis.maxRangeLength || Infinity;
 	
 	g.settings = {
 		yMax: 0,
+		fontSize: g.options.graph.fontFamily || 'Helvetica',
+		class: g.options.graph.class_prefix || 'chartress',
 		padding: {
-			top: g.options.graph.padding.top || 10,
-			right: g.options.graph.padding.right || 8,
-			bottom: g.options.graph.padding.bottom || 25,
-			left: g.options.graph.padding.left || 35
+			top: g.options.graph.padding.top || 0,
+			right: g.options.graph.padding.right || 0,
+			bottom: g.options.graph.padding.bottom || 0,
+			left: g.options.graph.padding.left || 0
 		},
-		type: g.options.type || 'normal',
+		type: g.options.type || 'line',
 		yAxis: {
 			markEvery: g.options.yAxis.markEvery || 1,
 			label: {
@@ -107,3 +111,20 @@ g.clear = function(){
 			}
 		}
 	};
+	// if (true) {}
+	if(g.settings.type === 'line') {
+		g.settings.padding = {
+			top: g.options.graph.padding.top || 10,
+			right: g.options.graph.padding.right || 8,
+			bottom: g.options.graph.padding.bottom || 25,
+			left: g.options.graph.padding.left || 35
+		}
+	}
+	if(g.settings.type === 'column') {
+		g.settings.padding = {
+			top: g.options.graph.padding.top || 0,
+			right: g.options.graph.padding.right || 0,
+			bottom: g.options.graph.padding.bottom || 20,
+			left: g.options.graph.padding.left || 0
+		}
+	}

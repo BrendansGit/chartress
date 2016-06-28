@@ -9,6 +9,7 @@ window.chartress = function($element, data){
 	//= require mods/drawPies.js
 	//= require mods/drawGraph.js
 	//= require mods/canvasResize.js
+	//= require mods/drawCanvas.js
 
 	g.drawGraph();
 

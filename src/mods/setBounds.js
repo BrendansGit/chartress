@@ -1,5 +1,5 @@
 g.setBounds = function() {
-	if (g.settings.type === 'normal') {
+	if (g.settings.type === 'line') {
 		var longest = 0;
 		for (var key in g.options.lines) {
 			(function(){
@@ -43,9 +43,9 @@ g.setBounds = function() {
 		}
 	}
 
-	g.settings.outweWidth = parseInt(getComputedStyle(el).width);
-	g.settings.width = g.settings.outweWidth - g.settings.padding.right - g.settings.padding.left;
-	g.settings.outerHeight = parseInt(getComputedStyle(el).height);
+	g.settings.outerWidth = parseInt(g_st(el).width);
+	g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
+	g.settings.outerHeight = parseInt(g_st(el).height);
 	g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
 
 	g.settings.rect = {

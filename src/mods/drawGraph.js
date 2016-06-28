@@ -2,7 +2,7 @@ g.drawGraph = function() {
 	g.clear();
 	g.setBounds();
 
-	if (g.settings.type === 'normal') {
+	if (g.settings.type === 'line') {
 		g.drawLabels();
 		g.drawLines();
 		g.drawLegend();

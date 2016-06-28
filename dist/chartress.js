@@ -446,14 +446,13 @@ window.chartress = function($element, data){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: title.size,
 				anchor: 'middle',
-			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top);
+			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top - (title.size * 0.9));
 			if (title.bold) {
 				maintext.font({
 					family: g.options.graph.fontFamily || 'Helvetica',
 					weight: 'bold'
 				});
 			}
-			maintext.dy(parseInt(getComputedStyle(maintext.node).height)*-0.9);
 	
 			var preTitle = title.pre || false;
 			if (preTitle) {
@@ -461,7 +460,7 @@ window.chartress = function($element, data){
 					family: g.options.graph.fontFamily || 'Helvetica',
 					size: preTitle.size,
 					anchor: 'middle'
-				}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 - (title.size/2.7));
+				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) - (title.size/2) - (preTitle.size) - 5 + g.settings.padding.top);
 			}
 	
 			var subTitle = title.sub || false;
@@ -470,7 +469,7 @@ window.chartress = function($element, data){
 					family: g.options.graph.fontFamily || 'Helvetica',
 					size: subTitle.size,
 					anchor: 'middle'
-				}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + (title.size/2.5) + g.settings.padding.top);
+				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) + (title.size/2.5) + g.settings.padding.top);
 			}
 		}
 	};

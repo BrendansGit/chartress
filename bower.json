@@ -15,10 +15,7 @@
   },
   "main": "dist/chartress.js",
   "ignore": [
-    "package.json",
     "gulpfile.js",
-    "node_modules",
-    "src",
-    "screenshots"
+    "screenshots",
   ]
 }

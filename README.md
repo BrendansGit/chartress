@@ -86,7 +86,7 @@ var piechart = {
 	type: 'pie',
 	lines: [
 		{
-			value: 100
+			value: 80
 		},
 		{
 			value: 61,
@@ -95,4 +95,3 @@ var piechart = {
 	]
 };
 ```
-##### result:

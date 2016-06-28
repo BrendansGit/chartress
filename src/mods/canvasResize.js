@@ -1,6 +1,6 @@
 g.canvasResize = function(){
 	g.draw.spof();
-	g.drawGraph();
+	g.drawChart();
 };
 
 var sizeCache = [parseInt(g_st(el).width), parseInt(g_st(el).height)];

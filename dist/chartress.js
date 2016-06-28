@@ -523,7 +523,7 @@ window.chartress = function($element, data){
 			}
 		}
 	};
-	g.drawGraph = function() {
+	g.drawChart = function() {
 		g.clear();
 		g.setBounds();
 	
@@ -538,10 +538,14 @@ window.chartress = function($element, data){
 		if (g.settings.type === 'pie') {
 			g.drawPies();
 		}
+	
+		setTimeout(function(){
+			g.draw.spof();
+		});
 	};
 	g.canvasResize = function(){
 		g.draw.spof();
-		g.drawGraph();
+		g.drawChart();
 	};
 	
 	var sizeCache = [parseInt(g_st(el).width), parseInt(g_st(el).height)];
@@ -569,7 +573,7 @@ window.chartress = function($element, data){
 		ctx.drawImage(img, 0, 0);
 	};
 
-	g.drawGraph();
+	g.drawChart();
 
 	return g;
 };

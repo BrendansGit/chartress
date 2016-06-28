@@ -1,4 +1,4 @@
-g.drawGraph = function() {
+g.drawChart = function() {
 	g.clear();
 	g.setBounds();
 
@@ -13,4 +13,8 @@ g.drawGraph = function() {
 	if (g.settings.type === 'pie') {
 		g.drawPies();
 	}
+
+	setTimeout(function(){
+		g.draw.spof();
+	});
 };

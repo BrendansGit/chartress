@@ -7,11 +7,11 @@ window.chartress = function($element, data){
 	//= require mods/drawLegend.js
 	//= require mods/drawColumns.js
 	//= require mods/drawPies.js
-	//= require mods/drawGraph.js
+	//= require mods/drawChart.js
 	//= require mods/canvasResize.js
 	//= require mods/drawCanvas.js
 
-	g.drawGraph();
+	g.drawChart();
 
 	return g;
 };

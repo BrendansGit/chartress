@@ -29,7 +29,6 @@ var graph = new chartress(element, data);
 
 ## Example data
 ### Line Chart:
-#### code:
 ```javascript
 var linechart = {
 	lines: [
@@ -49,11 +48,8 @@ var linechart = {
 	]
 }
 ```
-##### result:
-![ScreenShot](https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/line-chart.png)
 
 ### Column Chart:
-#### code:
 ```javascript
 var coumnchart = {
 	type: 'column',
@@ -83,11 +79,8 @@ var coumnchart = {
 	]
 };
 ```
-##### result:
-![ScreenShot](https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/column-chart.png)
 
 ### Pie Chart:
-#### code:
 ```javascript
 var piechart = {
 	type: 'pie',
@@ -103,4 +96,3 @@ var piechart = {
 };
 ```
 ##### result:
-![ScreenShot](https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/pie-chart.png)

@@ -16,8 +16,14 @@ bower install chartress --save
 <script type="text/javascript" src="/bower_components/chartress/dist/chartress.min.js"></script>
 ```
 
+#### Prepare some html
+```html
+<div class="chartress"></div>
+```
+
 #### Run chartress
 ```javascript
+var element = document.querySelector('.chartress');
 var graph = new chartress(element, data);
 ```
 
@@ -25,23 +31,23 @@ var graph = new chartress(element, data);
 ### Line Chart:
 #### code:
 ```javascript
-	var linechart = {
-		lines: [
-			{
-				name: 'Red',
-				color: 'red',
-				plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
-			},{
-				name: 'Black',
-				plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
-			},{
-				name: 'Gray',
-				dash: '10,5',
-				color: 'gray',
-				plot: [4, 6, 20, 18, 24, 8, 0, 0, 20, 10, 5],
-			}
-		]
-	}
+var linechart = {
+	lines: [
+		{
+			name: 'Red',
+			color: 'red',
+			plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
+		},{
+			name: 'Black',
+			plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
+		},{
+			name: 'Gray',
+			dash: '10,5',
+			color: 'gray',
+			plot: [4, 6, 20, 18, 24, 8, 0, 0, 20, 10, 5],
+		}
+	]
+}
 ```
 ##### result:
 ![ScreenShot](https://raw.githubusercontent.com/jsnanigans/chartress/master/screenshots/line-chart.png)

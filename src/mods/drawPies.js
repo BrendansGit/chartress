@@ -69,8 +69,7 @@ g.drawPies = function(){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: preTitle.size,
 				anchor: 'middle'
-			}).dx(g.settings.width / 2 + g.settings.padding.top).dy((g.settings.height/2 + g.settings.padding.left) - (parseInt(getComputedStyle(maintext.node).height)/2));
-			pretext.dy(parseInt(getComputedStyle(maintext.node).height)*-1.8);
+			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 - (title.size/2.7));
 		}
 
 		var subTitle = title.sub || false;
@@ -79,7 +78,7 @@ g.drawPies = function(){
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: subTitle.size,
 				anchor: 'middle'
-			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + (g.settings.height*0.11) + g.settings.padding.top);
+			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + (title.size/2.5) + g.settings.padding.top);
 		}
 	}
 };

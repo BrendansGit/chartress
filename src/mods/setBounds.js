@@ -34,7 +34,6 @@ g.setBounds = function() {
 		};
 	}
 	if (g.settings.type === 'pie') {
-		g.settings.pie = {};
 		g.settings.pie.total = g.options.pie.total || false;
 		if (g.settings.pie.total === false) {
 			for (var key in g.options.lines) {

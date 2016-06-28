@@ -34,11 +34,20 @@ if (typeof g.options.xAxis.label === 'undefined')
 	g.options.xAxis.label = {};
 if (typeof g.options.xAxis.format === 'undefined')
 	g.options.xAxis.format = function(string){return string};
-
 if (typeof g.options.legend.padding === 'undefined')
 	g.options.legend.padding = {};
 if (typeof g.options.graph.padding === 'undefined')
 	g.options.graph.padding = {};
+if (typeof g.options.columns === 'undefined')
+	g.options.columns = {};
+if (typeof g.options.columns.labels === 'undefined')
+	g.options.columns.labels = {};
+if (typeof g.options.pie === 'undefined')
+	g.options.pie = {};
+if (typeof g.options.pie.title === 'undefined')
+	g.options.pie.title = {};
+
+
 
 
 var maxLength = g.options.xAxis.maxRangeLength || Infinity;
@@ -79,6 +88,22 @@ g.settings = {
 			right: g.options.legend.padding.right || 0,
 			bottom: g.options.legend.padding.bottom || 0,
 			left: g.options.legend.padding.left || 0,
+		}
+	},
+	columns: {
+		width: g.options.columns.width || 15,
+		labels: {
+			fontSize: g.options.columns.labels.fontSize || 16,
+			y: g.options.columns.labels.y || 1
+		}
+	},
+	pie: {
+		total: g.options.pie.total || 100,
+		red: 'blue',
+		title: {
+			size: g.options.pie.title.size || 50,
+			bold: g.options.pie.title.bold || true,
+			text: g.options.pie.title.text || false
 		}
 	}
 };

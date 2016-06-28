@@ -12,46 +12,48 @@ g.drawPies = function(){
 		(function(){
 			var line = g.options.lines[key];
 
+			var classname = line.classname || 'noclass-'+i;
+
 			var lineWidth = size;
 			if (typeof line.width !== 'undefined') {
 				lineWidth = line.width
 			}
-			g.pies[line.classname] = {};
-			g.pies[line.classname].el = g.draw_pie.circle(size);
-			g.pies[line.classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
+			g.pies[classname] = {};
+			g.pies[classname].el = g.draw_pie.circle(size);
+			g.pies[classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
 				.addClass('chartress__pie')
 				.dx(x).dy(y)
 				.stroke({
 					width: lineWidth,
-					color: '#000'
+					color: line.color || '#aaa'
 				}).rotate(-90);
 			var dia = (2 * Math.PI *(size/2));
-			g.pies[line.classname].el.attr('stroke-dasharray', 0+','+dia);
+			g.pies[classname].el.attr('stroke-dasharray', 0+','+dia);
 			
 			if (line.mask !== false) {
 				mask = g.draw_pie.circle(size).fill({color:'white'}).dx(x).dy(y);
-				g.pies[line.classname].el.maskWith(mask);
+				g.pies[classname].el.maskWith(mask);
 			}
 
-			g.pies[line.classname].set = function(nv) {
+			g.pies[classname].set = function(nv) {
 				var res = ((nv*dia) / 100);
-				g.pies[line.classname].el.attr('stroke-dasharray', res+','+dia);
+				g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
 			};
 			setTimeout(function(){
-				g.pies[line.classname].set(line.value);
-				g.pies[line.classname].el.addClass('chartress__pie--' + line.classname);
+				g.pies[classname].set(line.value);
+				g.pies[classname].el.addClass('chartress__pie--' + classname);
 			});
 			i++;
 		})();
 	};
 
-	var title = g.options.pie.title || false;
-	if (title) {
+	var title = g.settings.pie.title || false;
+	if (title.text !== false) {
 		g.draw_pie_title = g.draw_pie.group().addClass('chartress__pie__title');
 		var maintext = g.draw_pie_title.text(title.text).addClass('chartress__pie__title--main').font({
 			family: g.options.graph.fontFamily || 'Helvetica',
 			size: title.size,
-			anchor: 'middle'
+			anchor: 'middle',
 		}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top);
 		if (title.bold) {
 			maintext.font({

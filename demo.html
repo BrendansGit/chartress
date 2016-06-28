@@ -79,20 +79,6 @@
 
 	var coumnchart = {
 		type: 'column',
-		graph: {
-			padding: {
-				top: 35,
-				bottom: 40
-			},
-			redrawTimeout: 1
-		},
-		columns: {
-			width: 21,
-			labels: {
-				fontsize: 16,
-				y: 1
-			}
-		},
 		lines: [
 			{
 				name: 'MO',
@@ -129,36 +115,17 @@
 	});
 
 	var piechart = {
-			type: 'pie',
-			graph: {
-				// padding: [20, 0, 20, 0],
-				padding: {
-					top: 20,
-					bottom: 20
-				},
-				redrawTimeout: 1
+		type: 'pie',
+		lines: [
+			{
+				value: 100
 			},
-			pie: {
-				total: 100,
-				title: {
-					text: '61%',
-					size: 50,
-					bold: true,
-				}
-			},
-			lines: [
-				{
-					value: 100,
-					classname: 'outline',
-					width: 5
-				},
-				{
-					value: 61,
-					classname: 'progress',
-					width: 40
-				}
-			]
-		};
+			{
+				value: 61,
+				color: '#1b860b'
+			}
+		]
+	};
 
 	</script>
 

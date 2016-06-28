@@ -36,11 +36,20 @@ window.chartress = function($element, data){
 		g.options.xAxis.label = {};
 	if (typeof g.options.xAxis.format === 'undefined')
 		g.options.xAxis.format = function(string){return string};
-	
 	if (typeof g.options.legend.padding === 'undefined')
 		g.options.legend.padding = {};
 	if (typeof g.options.graph.padding === 'undefined')
 		g.options.graph.padding = {};
+	if (typeof g.options.columns === 'undefined')
+		g.options.columns = {};
+	if (typeof g.options.columns.labels === 'undefined')
+		g.options.columns.labels = {};
+	if (typeof g.options.pie === 'undefined')
+		g.options.pie = {};
+	if (typeof g.options.pie.title === 'undefined')
+		g.options.pie.title = {};
+	
+	
 	
 	
 	var maxLength = g.options.xAxis.maxRangeLength || Infinity;
@@ -82,6 +91,22 @@ window.chartress = function($element, data){
 				bottom: g.options.legend.padding.bottom || 0,
 				left: g.options.legend.padding.left || 0,
 			}
+		},
+		columns: {
+			width: g.options.columns.width || 15,
+			labels: {
+				fontSize: g.options.columns.labels.fontSize || 16,
+				y: g.options.columns.labels.y || 1
+			}
+		},
+		pie: {
+			total: g.options.pie.total || 100,
+			red: 'blue',
+			title: {
+				size: g.options.pie.title.size || 50,
+				bold: g.options.pie.title.bold || true,
+				text: g.options.pie.title.text || false
+			}
 		}
 	};
 	g.setBounds = function() {
@@ -120,7 +145,6 @@ window.chartress = function($element, data){
 			};
 		}
 		if (g.settings.type === 'pie') {
-			g.settings.pie = {};
 			g.settings.pie.total = g.options.pie.total || false;
 			if (g.settings.pie.total === false) {
 				for (var key in g.options.lines) {
@@ -345,16 +369,16 @@ window.chartress = function($element, data){
 				var proc = ((100 / g.options.lines.length) / 100) * i;
 				var space = g.settings.width / g.options.lines.length;
 				var xcenter = (proc * g.settings.width) + space - (space/2);
-				var columnWidth = g.options.columns.width || 10;
+				var columnWidth = g.settings.columns.width || 10;
 				var columnHeight = (line.value / g.settings.largestcolumn) * g.settings.height;
-				var corr_label_y = g.options.columns.labels.y || 0;
+				var corr_label_y = g.settings.columns.labels.y || 0;
 	
 				g.draw_columns.labels.text(line.name)
 						.fill('#000')
 						.font({
 							family: g.options.graph.fontFamily || 'Helvetica',
 							anchor: 'middle',
-							size: g.options.columns.labels.fontsize || 14
+							size: g.settings.columns.labels.fontsize || 14
 						})
 						.dx(xcenter + g.settings.padding.left)
 						.dy(g.settings.height + corr_label_y + g.settings.padding.top)
@@ -380,46 +404,48 @@ window.chartress = function($element, data){
 			(function(){
 				var line = g.options.lines[key];
 	
+				var classname = line.classname || 'noclass-'+i;
+	
 				var lineWidth = size;
 				if (typeof line.width !== 'undefined') {
 					lineWidth = line.width
 				}
-				g.pies[line.classname] = {};
-				g.pies[line.classname].el = g.draw_pie.circle(size);
-				g.pies[line.classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
+				g.pies[classname] = {};
+				g.pies[classname].el = g.draw_pie.circle(size);
+				g.pies[classname].el.attr('stroke-dasharray', '20,10').fill('transparent')
 					.addClass('chartress__pie')
 					.dx(x).dy(y)
 					.stroke({
 						width: lineWidth,
-						color: '#000'
+						color: line.color || '#aaa'
 					}).rotate(-90);
 				var dia = (2 * Math.PI *(size/2));
-				g.pies[line.classname].el.attr('stroke-dasharray', 0+','+dia);
+				g.pies[classname].el.attr('stroke-dasharray', 0+','+dia);
 				
 				if (line.mask !== false) {
 					mask = g.draw_pie.circle(size).fill({color:'white'}).dx(x).dy(y);
-					g.pies[line.classname].el.maskWith(mask);
+					g.pies[classname].el.maskWith(mask);
 				}
 	
-				g.pies[line.classname].set = function(nv) {
+				g.pies[classname].set = function(nv) {
 					var res = ((nv*dia) / 100);
-					g.pies[line.classname].el.attr('stroke-dasharray', res+','+dia);
+					g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
 				};
 				setTimeout(function(){
-					g.pies[line.classname].set(line.value);
-					g.pies[line.classname].el.addClass('chartress__pie--' + line.classname);
+					g.pies[classname].set(line.value);
+					g.pies[classname].el.addClass('chartress__pie--' + classname);
 				});
 				i++;
 			})();
 		};
 	
-		var title = g.options.pie.title || false;
-		if (title) {
+		var title = g.settings.pie.title || false;
+		if (title.text !== false) {
 			g.draw_pie_title = g.draw_pie.group().addClass('chartress__pie__title');
 			var maintext = g.draw_pie_title.text(title.text).addClass('chartress__pie__title--main').font({
 				family: g.options.graph.fontFamily || 'Helvetica',
 				size: title.size,
-				anchor: 'middle'
+				anchor: 'middle',
 			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top);
 			if (title.bold) {
 				maintext.font({

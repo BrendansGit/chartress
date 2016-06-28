@@ -21,12 +21,6 @@ bower install chartress --save
 var graph = new chartress(element, data);
 ```
 
-## Demos
-- [Flowchart](http://codepen.io/jsnanigans/pen/dXNOXE)
-- [Pipechart](http://codepen.io/jsnanigans/pen/XKMrYP)
-- [Piechart](http://codepen.io/jsnanigans/pen/gMmYjr)
-
-
 ## Example data
 ### Line Chart:
 #### code:

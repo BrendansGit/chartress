@@ -57,6 +57,54 @@
 
 	</script>
 
+
+	<h2>Line Chart - time</h2>
+	<div class="linechart2"></div>
+	<h2>Copy to Canvas</h2>
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) { 
+		var chart = chartress(document.querySelector('.linechart2'), linechart2);
+	});
+
+	var linechart2 = {
+		graph: {
+			padding: {
+				right: 25
+			}
+		},
+		xAxis: {
+			label: {
+				color: '#000',
+				format: function(label){
+					return label+':00';
+				}
+			},
+			markEvery: 2,
+			maxRangeLength: 11,
+			range: {
+				from: 7,
+				to: 17
+			}
+		},
+		lines: [
+			{
+				name: 'Red',
+				color: 'red',
+				plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
+			},{
+				name: 'Black',
+				plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
+			},{
+				name: 'Gray',
+				dash: '10,5',
+				color: 'gray',
+				plot: [4, 6, 20, 18, 24, 8, 0, 0, 20, 10, 5],
+			}
+		]
+	}
+
+	</script>
+
 	<h2>Column Chart</h2>
 	<div class="coumnchart"></div>
 	<script type="text/javascript">
@@ -70,7 +118,9 @@
 		lines: [
 			{
 				name: 'MO',
-				value: 40 
+				value: 40,
+				color: 'orange',
+				textColor: 'red'
 			},{
 				name: 'TU',
 				value: 60

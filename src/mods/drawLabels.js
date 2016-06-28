@@ -41,14 +41,17 @@ g.drawLabels = function() {
 
 	g.settings.xPoints = [];
 	g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
-	// todo: make xAxis.markEvery work properly
 	for (i = 0; i <= dateRange; i++) {
 		(function(){
-			var text = (g.settings.xAxis.range.from + i).toString();
+			var text = (g.settings.xAxis.range.from + i);
+			text = g.options.xAxis.label.format(text);
+			text = text.toString();
 			var proc = ((i) / (dateRange))
 			var posX = ((g.settings.width) * proc) + g.settings.padding.left;
 
 			if (i%g.settings.xAxis.markEvery === 0) {
+
+				console.log(i);
 
 				g.xLabels.text(text)
 					.fill(g.settings.xAxis.label.color)

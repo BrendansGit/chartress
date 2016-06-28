@@ -32,8 +32,8 @@ g.clear = function(){
 		g.options.legend = {};
 	if (typeof g.options.xAxis.label === 'undefined')
 		g.options.xAxis.label = {};
-	if (typeof g.options.xAxis.format === 'undefined')
-		g.options.xAxis.format = function(string){return string};
+	if (typeof g.options.xAxis.label.format === 'undefined')
+		g.options.xAxis.label.format = function(string){return string};
 	if (typeof g.options.legend.padding === 'undefined')
 		g.options.legend.padding = {};
 	if (typeof g.options.graph.padding === 'undefined')
@@ -124,7 +124,7 @@ g.clear = function(){
 		g.settings.padding = {
 			top: g.options.graph.padding.top || 0,
 			right: g.options.graph.padding.right || 0,
-			bottom: g.options.graph.padding.bottom || 20,
+			bottom: g.options.graph.padding.bottom || 25,
 			left: g.options.graph.padding.left || 0
 		}
 	}

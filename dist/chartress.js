@@ -271,35 +271,43 @@ window.chartress = function($element, data){
 			labelPosFix = (g.settings.width / (labelRange)) / 2;
 		}
 	
-		g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
-		for (i = 0; i <= labelRange; i++) {
-			(function(){
-				var text = (g.settings.xAxis.range.from + i);
-				text = g.options.xAxis.label.format(text);
-				text = text.toString();
-				var proc = ((i) / (labelRange))
-				var posX = ((g.settings.width) * proc) + g.settings.padding.left;
-				var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
-				if (g.settings.xAxis.label.pos === 'top') {
-					posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
-				}
+		if (g.options.xAxis.visible !== false) {
+			var startAt = 0;
+			if (g.options.xAxis.maxRangeLength) {
+				startAt = g.options.xAxis.maxRangeLength + 1;
+			}
+			g.log([startAt, labelRange])
 	
-				if (i%g.settings.xAxis.markEvery === 0) {
-					g.xLabels.text(text)
-						.fill(g.settings.xAxis.label.color)
-						.font({
-							family: g.settings.fontFamily,
-							anchor: 'middle',
-							size: g.settings.xAxis.label.size
-						})
-						.dx(posX + labelPosFix)
-						.dy(posY)
-						.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
+			g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
+			for (i = 0; i <= labelRange; i++) {
+				(function(){
+					var text = (g.settings.xAxis.range.from + i) + startAt;
+					text = g.options.xAxis.label.format(text);
+					text = text.toString();
+					var proc = ((i) / (labelRange))
+					var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+					var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
+					if (g.settings.xAxis.label.pos === 'top') {
+						posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
+					}
 	
-				}
+					if (i%g.settings.xAxis.markEvery === 0) {
+						g.xLabels.text(text)
+							.fill(g.settings.xAxis.label.color)
+							.font({
+								family: g.settings.fontFamily,
+								anchor: 'middle',
+								size: g.settings.xAxis.label.size
+							})
+							.dx(posX + labelPosFix)
+							.dy(posY)
+							.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
 	
-				g.settings.xPoints.push(posX);
-			})();
+					}
+	
+					g.settings.xPoints.push(posX);
+				})();
+			}
 		}
 	};
 	g.drawLines = function(){
@@ -430,7 +438,7 @@ window.chartress = function($element, data){
 		var columnSpaceX = g.settings.width / maxLength;
 	
 		for (var i = 0; i < maxLength; i++) {
-			g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+e);
+			g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+i);
 			// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.padding.left;
 			var absPosX = (columnSpaceX * i) + g.settings.padding.left;
 			var corr_label_y = g.settings.columns.labels.y;
@@ -438,7 +446,11 @@ window.chartress = function($element, data){
 			var e = 0;
 			for (var key in g.options.dataset) {
 				var line = g.options.dataset[key];
+				g.log(line);
 				var name = line.name || (i+1).toString();
+				if (typeof name == 'object') {
+					name = name[i];
+				}
 				var color = line.color || '#222';
 				var textColor = line.textColor || color;
 				var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
@@ -447,14 +459,11 @@ window.chartress = function($element, data){
 				var columnSpace = g.settings.columns.space;
 				var columnHeight = (line.__plot[i] / g.settings.largestcolumn) * g.settings.height;
 	
-				var position = maxLength * -0.5;
-				if (maxLength%2) {
-					position+=0.5;
-				}
-				position++;
-				position += e;
+				var position = ((g.options.dataset.length* -0.5) + 0.5) + e;
+	
 	
 				var offsetX = position* (columnWidth+columnSpace);
+				g.log([position, offsetX])
 	
 				g.draw_columns[i].text(name)
 					.fill(textColor)

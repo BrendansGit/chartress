@@ -5,7 +5,7 @@ g.drawColumns = function(){
 	var columnSpaceX = g.settings.width / maxLength;
 
 	for (var i = 0; i < maxLength; i++) {
-		g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+e);
+		g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+i);
 		// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.padding.left;
 		var absPosX = (columnSpaceX * i) + g.settings.padding.left;
 		var corr_label_y = g.settings.columns.labels.y;
@@ -13,7 +13,11 @@ g.drawColumns = function(){
 		var e = 0;
 		for (var key in g.options.dataset) {
 			var line = g.options.dataset[key];
+			g.log(line);
 			var name = line.name || (i+1).toString();
+			if (typeof name == 'object') {
+				name = name[i];
+			}
 			var color = line.color || '#222';
 			var textColor = line.textColor || color;
 			var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
@@ -22,14 +26,11 @@ g.drawColumns = function(){
 			var columnSpace = g.settings.columns.space;
 			var columnHeight = (line.__plot[i] / g.settings.largestcolumn) * g.settings.height;
 
-			var position = maxLength * -0.5;
-			if (maxLength%2) {
-				position+=0.5;
-			}
-			position++;
-			position += e;
+			var position = ((g.options.dataset.length* -0.5) + 0.5) + e;
+
 
 			var offsetX = position* (columnWidth+columnSpace);
+			g.log([position, offsetX])
 
 			g.draw_columns[i].text(name)
 				.fill(textColor)

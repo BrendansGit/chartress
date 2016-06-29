@@ -65,6 +65,7 @@
 	});
 
 	var linechart2 = {
+		debug: true,
 		graph: {
 			padding: {
 				right: 25
@@ -136,32 +137,30 @@
 				plot: [4, 6, 20, 18],
 			}
 		]
-		// dataset: [
-		// 	{
-		// 		name: 'MO',
-		// 		value: 40,
-		// 		color: 'orange',
-		// 		textColor: 'red'
-		// 	},{
-		// 		name: 'TU',
-		// 		value: 60
-		// 	},{
-		// 		name: 'WE',
-		// 		value: 30
-		// 	},{
-		// 		name: 'TH',
-		// 		value: 60
-		// 	},{
-		// 		name: 'FR',
-		// 		value: 90
-		// 	},{
-		// 		name: 'SA',
-		// 		value: 22
-		// 	},{
-		// 		name: 'SU',
-		// 		value: 15
-		// 	}
-		// ]
+	};
+
+	</script>
+
+	<h2>Column Chart 2</h2>
+	<div class="coumnchart2"></div>
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) { 
+		chartress(document.querySelector('.coumnchart2'), coumnchart2);
+	});
+
+
+	var coumnchart2 = {
+		// debug: true,
+		type: 'column',
+		xAxis: {
+			visible: false
+		},
+		dataset: [
+			{
+				name: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
+				plot: [12, 24, 45, 65, 42, 33, 80],
+			}
+		]
 	};
 
 	</script>

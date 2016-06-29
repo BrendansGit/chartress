@@ -2,17 +2,22 @@ window.chartress = function($element, data){
 
 	var g = {};
 		var that = this;
-		var el = $element;
 		if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
-			el = el[0];
+			$element = $element[0];
 		}
+		var el = $element;
+		var chel = document.createElement('div');
+		el.appendChild(chel);
+		chel.className = 'chartress';
+		chel.style.height = '100%';
+		chel.style.width = '100%';
 		function sortNumber(a,b) {
 			return b - a;
 		}
 		
 		g.options = data;
 		
-		g.draw = SVG(el).size('100%', '100%').spof();
+		g.draw = SVG(chel).size('100%', '100%').spof();
 		
 		g.clear = function(){
 			g.draw.clear();
@@ -20,7 +25,7 @@ window.chartress = function($element, data){
 		
 		if (g.options.debug === true){
 			console.info('chartress debug enabled for ');
-			console.info(el);
+			console.info(chel);
 			console.info('Passed Data: ');
 			console.info(g.options);
 			console.log('------');
@@ -68,9 +73,9 @@ window.chartress = function($element, data){
 		var g_st = function(el){
 			return getComputedStyle(el);
 		}
-		var maxLength = g.options.xAxis.maxRangeLength || null;
 		
 		g.settings = {
+			maxLength: g.options.xAxis.maxRangeLength || null,
 			yMax: 0,
 			fontSize: g.options.graph.fontFamily || 'Helvetica',
 			class: g.options.graph.class_prefix || 'chartress',
@@ -158,13 +163,13 @@ window.chartress = function($element, data){
 				(function(){
 					var line = g.options.dataset[key];
 					var plot = line.plot.slice(0);
-					if (maxLength !== null && plot.length > maxLength) {
+					if (g.settings.maxLength !== null && plot.length > g.settings.maxLength) {
 						plot.reverse();
-						plot.length = maxLength;
+						plot.length = g.settings.maxLength;
 						plot.reverse();
 					}
 					if (plot.length > longest) {
-						longest = plot.length - 1;
+						longest = plot.length;
 					}
 					line.__plot = plot.slice(0);
 					plot.sort(sortNumber);
@@ -173,7 +178,7 @@ window.chartress = function($element, data){
 					}
 				})();
 			};
-			maxLength = longest;
+			g.settings.maxLength = longest;
 			if (g.settings.xAxis.range.to === null) {
 				g.settings.xAxis.range.to = longest;
 			}
@@ -200,9 +205,9 @@ window.chartress = function($element, data){
 			}
 		}
 	
-		g.settings.outerWidth = parseInt(g_st(el).width);
+		g.settings.outerWidth = parseInt(g_st(chel).width);
 		g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
-		g.settings.outerHeight = parseInt(g_st(el).height);
+		g.settings.outerHeight = parseInt(g_st(chel).height);
 		g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
 	
 		g.settings.rect = {
@@ -260,8 +265,8 @@ window.chartress = function($element, data){
 		var xPoints = g.settings.longestLine,
 			labelRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
 	
-		if (maxLength !== null) {
-			labelRange = maxLength;
+		if (g.settings.maxLength !== null) {
+			labelRange = g.settings.maxLength;
 		}
 	
 		g.settings.xPoints = [];
@@ -276,7 +281,7 @@ window.chartress = function($element, data){
 			if (g.options.xAxis.maxRangeLength) {
 				startAt = g.options.xAxis.maxRangeLength + 1;
 			}
-			g.log([startAt, labelRange])
+			// g.log([startAt, labelRange])
 	
 			g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 			for (i = 0; i <= labelRange; i++) {
@@ -327,8 +332,7 @@ window.chartress = function($element, data){
 			for (var key in line.__plot) {
 				(function(){
 					var point = line.__plot[key];
-					// var xPos = g.settings.xPoints[x];
-					var xPos = ((x/maxLength) * g.settings.width) + g.settings.padding.left;
+					var xPos = ((x/(g.settings.maxLength-1)) * g.settings.width) + g.settings.padding.left;
 					var yPos = ((point / g.settings.yMax) * g.settings.height);
 					yPos = (g.settings.height - yPos) + g.settings.padding.top;
 					pointsArr.push([xPos, yPos]);
@@ -433,11 +437,11 @@ window.chartress = function($element, data){
 	};
 	g.drawColumns = function(){
 		g.draw_columns = [];
-		maxLength++;
+		var useLength = g.settings.maxLength;
 	
-		var columnSpaceX = g.settings.width / maxLength;
+		var columnSpaceX = g.settings.width / useLength;
 	
-		for (var i = 0; i < maxLength; i++) {
+		for (var i = 0; i < useLength; i++) {
 			g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+i);
 			// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.padding.left;
 			var absPosX = (columnSpaceX * i) + g.settings.padding.left;
@@ -485,42 +489,6 @@ window.chartress = function($element, data){
 				e++;
 			}
 		}
-	
-		// for (var key in g.options.dataset) {
-		// 	(function(){
-		// 		var line = g.options.dataset[key];
-		// 		var name = line.name || (i+1).toString();
-		// 		var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
-		// 		g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+classname);
-		// 		var color = line.color || '#222';
-		// 		var textColor = line.textColor || color;
-		// 		var proc = ((100 / g.options.dataset.length) / 100) * i;
-		// 		var space = g.settings.width / g.options.dataset.length;
-		// 		var xcenter = (proc * g.settings.width) + space - (space/2);
-		// 		var columnWidth = g.settings.columns.width;
-		// 		var columnHeight = (line.value / g.settings.largestcolumn) * g.settings.height;
-		// 		var corr_label_y = g.settings.columns.labels.y;
-	
-		// 		g.draw_columns[i].text(name)
-		// 				.fill(textColor)
-		// 				.font({
-		// 					family: g.settings.fontFamily,
-		// 					anchor: 'middle',
-		// 					size: g.settings.columns.labels.fontsize
-		// 				})
-		// 				.dx(xcenter + g.settings.padding.left)
-		// 				.dy(g.settings.height + corr_label_y + g.settings.padding.top)
-		// 				.addClass(g.settings.class+'__columns__label '+g.settings.class+'__columns__label--'+classname);
-	
-		// 		g.draw_columns[i].rect(columnWidth, columnHeight)
-		// 			.dx(xcenter - (columnWidth/2) + g.settings.padding.left)
-		// 			.dy(g.settings.height - columnHeight + g.settings.padding.top)
-		// 			.fill(color)
-		// 			.addClass(g.settings.class+'__columns__column '+g.settings.class+'__columns__column--'+classname);
-	
-		// 		i++;
-		// 	})();
-		// };
 	};
 	g.drawPies = function(){
 		var i = 0;
@@ -588,7 +556,7 @@ window.chartress = function($element, data){
 				}
 	
 	
-				var res = ((nv*dia) / total);
+				var res = ((line.value*dia) / total);
 				g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
 				g.pies[classname].el.addClass(g.settings.class+'__pie--' + classname);
 				i++;
@@ -651,17 +619,17 @@ window.chartress = function($element, data){
 		});
 	};
 	g.canvasResize = function(){
-		g.draw.spof();
 		g.drawChart();
+		g.draw.spof();
 	};
 	
-	var sizeCache = [parseInt(g_st(el).width), parseInt(g_st(el).height)];
+	var sizeCache = [parseInt(g_st(chel).width), parseInt(g_st(chel).height)];
 	var to;
 	
 	SVG.on(window, 'resize', function() {
-		if (sizeCache[0] !== parseInt(g_st(el).width) || sizeCache[1] !== parseInt(g_st(el).height)) {
+		if (sizeCache[0] !== parseInt(g_st(chel).width) || sizeCache[1] !== parseInt(g_st(chel).height)) {
 			clearTimeout(to);
-			to = setTimeout(g.canvasResize, g.options.graph.redrawTimeout || 0);
+			to = setTimeout(g.canvasResize, g.options.graph.redrawTimeout || 5);
 		}
 	});
 	g.drawToCanvas = function($canvas){

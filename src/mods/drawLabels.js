@@ -41,8 +41,8 @@ g.drawLabels = function() {
 	var xPoints = g.settings.longestLine,
 		labelRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
 
-	if (maxLength !== null) {
-		labelRange = maxLength;
+	if (g.settings.maxLength !== null) {
+		labelRange = g.settings.maxLength;
 	}
 
 	g.settings.xPoints = [];
@@ -57,7 +57,7 @@ g.drawLabels = function() {
 		if (g.options.xAxis.maxRangeLength) {
 			startAt = g.options.xAxis.maxRangeLength + 1;
 		}
-		g.log([startAt, labelRange])
+		// g.log([startAt, labelRange])
 
 		g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 		for (i = 0; i <= labelRange; i++) {

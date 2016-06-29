@@ -5,13 +5,13 @@ g.setBounds = function() {
 			(function(){
 				var line = g.options.dataset[key];
 				var plot = line.plot.slice(0);
-				if (maxLength !== null && plot.length > maxLength) {
+				if (g.settings.maxLength !== null && plot.length > g.settings.maxLength) {
 					plot.reverse();
-					plot.length = maxLength;
+					plot.length = g.settings.maxLength;
 					plot.reverse();
 				}
 				if (plot.length > longest) {
-					longest = plot.length - 1;
+					longest = plot.length;
 				}
 				line.__plot = plot.slice(0);
 				plot.sort(sortNumber);
@@ -20,7 +20,7 @@ g.setBounds = function() {
 				}
 			})();
 		};
-		maxLength = longest;
+		g.settings.maxLength = longest;
 		if (g.settings.xAxis.range.to === null) {
 			g.settings.xAxis.range.to = longest;
 		}
@@ -47,9 +47,9 @@ g.setBounds = function() {
 		}
 	}
 
-	g.settings.outerWidth = parseInt(g_st(el).width);
+	g.settings.outerWidth = parseInt(g_st(chel).width);
 	g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
-	g.settings.outerHeight = parseInt(g_st(el).height);
+	g.settings.outerHeight = parseInt(g_st(chel).height);
 	g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
 
 	g.settings.rect = {

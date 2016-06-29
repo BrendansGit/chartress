@@ -10,10 +10,13 @@
 			padding: 20px;
 			background: #0b6786;
 		}
+		* {
+			box-sizing: border-box;
+		}
 		h2 {
 			color: #fff;
 		}
-		div , canvas{
+		body > div , body > canvas{
 			margin: 0 auto 40px;
 			width: 800px; 
 			max-width: 100%; 
@@ -21,6 +24,7 @@
 			background: #fff;
 			box-shadow: 0 0 20px rgba(0,0,0,.2);
 			padding: 20px;
+			/*border: 20px solid #fff;*/
 		}
 	</style>
 </head>
@@ -37,6 +41,7 @@
 	});
 
 	var linechart = {
+		// debug: true,
 		dataset: [
 			{
 				name: 'Red',
@@ -229,7 +234,7 @@
 
 
 	<script type="text/javascript" src="bower_components/svg.js/dist/svg.min.js"></script>
-	<script type="text/javascript" src="dist/chartress.min.js"></script>
+	<script type="text/javascript" src="dist/chartress.js"></script>
 
 
 </body>

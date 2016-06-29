@@ -1,15 +1,20 @@
 var that = this;
-var el = $element;
 if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
-	el = el[0];
+	$element = $element[0];
 }
+var el = $element;
+var chel = document.createElement('div');
+el.appendChild(chel);
+chel.className = 'chartress';
+chel.style.height = '100%';
+chel.style.width = '100%';
 function sortNumber(a,b) {
 	return b - a;
 }
 
 g.options = data;
 
-g.draw = SVG(el).size('100%', '100%').spof();
+g.draw = SVG(chel).size('100%', '100%').spof();
 
 g.clear = function(){
 	g.draw.clear();
@@ -17,7 +22,7 @@ g.clear = function(){
 
 if (g.options.debug === true){
 	console.info('chartress debug enabled for ');
-	console.info(el);
+	console.info(chel);
 	console.info('Passed Data: ');
 	console.info(g.options);
 	console.log('------');
@@ -65,9 +70,9 @@ g.log = function(e){
 var g_st = function(el){
 	return getComputedStyle(el);
 }
-var maxLength = g.options.xAxis.maxRangeLength || null;
 
 g.settings = {
+	maxLength: g.options.xAxis.maxRangeLength || null,
 	yMax: 0,
 	fontSize: g.options.graph.fontFamily || 'Helvetica',
 	class: g.options.graph.class_prefix || 'chartress',

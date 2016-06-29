@@ -64,7 +64,7 @@ g.drawPies = function(){
 			}
 
 
-			var res = ((nv*dia) / total);
+			var res = ((line.value*dia) / total);
 			g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
 			g.pies[classname].el.addClass(g.settings.class+'__pie--' + classname);
 			i++;

@@ -15,8 +15,7 @@ g.drawLines = function(){
 		for (var key in line.__plot) {
 			(function(){
 				var point = line.__plot[key];
-				// var xPos = g.settings.xPoints[x];
-				var xPos = ((x/maxLength) * g.settings.width) + g.settings.padding.left;
+				var xPos = ((x/(g.settings.maxLength-1)) * g.settings.width) + g.settings.padding.left;
 				var yPos = ((point / g.settings.yMax) * g.settings.height);
 				yPos = (g.settings.height - yPos) + g.settings.padding.top;
 				pointsArr.push([xPos, yPos]);

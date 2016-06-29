@@ -37,7 +37,6 @@
 	});
 
 	var linechart = {
-		debug: true,
 		dataset: [
 			{
 				name: 'Red',
@@ -120,33 +119,49 @@
 
 
 	var coumnchart = {
+		// debug: true,
 		type: 'column',
 		dataset: [
 			{
-				name: 'MO',
-				value: 40,
-				color: 'orange',
-				textColor: 'red'
+				name: 'Red',
+				color: 'red',
+				plot: [1, 10, 50, 80],
+			}
+			,{
+				name: 'Black',
+				plot: [40, 20, 1, 50],
 			},{
-				name: 'TU',
-				value: 60
-			},{
-				name: 'WE',
-				value: 30
-			},{
-				name: 'TH',
-				value: 60
-			},{
-				name: 'FR',
-				value: 90
-			},{
-				name: 'SA',
-				value: 22
-			},{
-				name: 'SU',
-				value: 15
+				name: 'Gray',
+				color: 'gray',
+				plot: [4, 6, 20, 18],
 			}
 		]
+		// dataset: [
+		// 	{
+		// 		name: 'MO',
+		// 		value: 40,
+		// 		color: 'orange',
+		// 		textColor: 'red'
+		// 	},{
+		// 		name: 'TU',
+		// 		value: 60
+		// 	},{
+		// 		name: 'WE',
+		// 		value: 30
+		// 	},{
+		// 		name: 'TH',
+		// 		value: 60
+		// 	},{
+		// 		name: 'FR',
+		// 		value: 90
+		// 	},{
+		// 		name: 'SA',
+		// 		value: 22
+		// 	},{
+		// 		name: 'SU',
+		// 		value: 15
+		// 	}
+		// ]
 	};
 
 	</script>

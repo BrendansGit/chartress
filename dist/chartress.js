@@ -40,6 +40,8 @@ window.chartress = function($element, data){
 			g.options.yAxis.label = {};
 		if (typeof g.options.legend === 'undefined')
 			g.options.legend = {};
+		if (typeof g.options.yAxis.label.format === 'undefined')
+			g.options.yAxis.label.format = function(string){return string};
 		if (typeof g.options.xAxis.label === 'undefined')
 			g.options.xAxis.label = {};
 		if (typeof g.options.xAxis.label.format === 'undefined')
@@ -66,7 +68,7 @@ window.chartress = function($element, data){
 		var g_st = function(el){
 			return getComputedStyle(el);
 		}
-		var maxLength = g.options.xAxis.maxRangeLength || Infinity;
+		var maxLength = g.options.xAxis.maxRangeLength || null;
 		
 		g.settings = {
 			yMax: 0,
@@ -95,7 +97,9 @@ window.chartress = function($element, data){
 				markEvery: g.options.xAxis.markEvery || 1,
 				label: {
 					color: g.options.xAxis.label.color || 'gray',
-					y: g.options.xAxis.label.y || 0
+					y: g.options.xAxis.label.y || 0,
+					pos: g.options.xAxis.label.position || 'bottom',
+					size: g.options.xAxis.label.size || 14
 				},
 			},
 			legend: {
@@ -109,7 +113,8 @@ window.chartress = function($element, data){
 				}
 			},
 			columns: {
-				width: g.options.columns.width || 15,
+				width: g.options.columns.width || 40,
+				space: g.options.columns.space || 4,
 				labels: {
 					fontSize: g.options.columns.labels.fontSize || 16,
 					y: g.options.columns.labels.y || 1
@@ -138,20 +143,22 @@ window.chartress = function($element, data){
 		}
 		if(g.settings.type === 'column') {
 			g.settings.padding = {
-				top: g.options.graph.padding.top || 0,
+				top: g.options.graph.padding.top || 25,
 				right: g.options.graph.padding.right || 0,
 				bottom: g.options.graph.padding.bottom || 25,
-				left: g.options.graph.padding.left || 0
-			}
+				left: g.options.graph.padding.left || 35
+			};
+			g.settings.xAxis.label.pos = g.options.xAxis.label.position || 'top';
+			g.settings.xAxis.label.y = g.options.xAxis.label.y || -5;
 		}
 	g.setBounds = function() {
-		if (g.settings.type === 'line') {
+		if (g.settings.type === 'line' || g.settings.type == 'column') {
 			var longest = 0;
 			for (var key in g.options.dataset) {
 				(function(){
 					var line = g.options.dataset[key];
 					var plot = line.plot.slice(0);
-					if (plot.length > maxLength) {
+					if (maxLength !== null && plot.length > maxLength) {
 						plot.reverse();
 						plot.length = maxLength;
 						plot.reverse();
@@ -175,10 +182,13 @@ window.chartress = function($element, data){
 			g.settings.largestcolumn = 0;
 			for (var key in g.options.dataset) {
 				var line = g.options.dataset[key];
-				if (g.settings.largestcolumn < line.value) {
-					g.settings.largestcolumn = line.value;
+				for (var i = 0; i < line.__plot.length; i++) {
+					var point = line.__plot[i];
+					if (g.settings.largestcolumn < point) {
+						g.settings.largestcolumn = point;
+					}
 				}
-			};
+			}
 		}
 		if (g.settings.type === 'pie') {
 			g.settings.pie.total = g.options.pie.total || false;
@@ -203,7 +213,9 @@ window.chartress = function($element, data){
 		};
 	
 		// debug rect
-		// g.draw.rect(g.settings.width, g.settings.height).fill('#eee').dx(g.settings.rect.left).dy(g.settings.rect.top);
+		if (g.options.debug === true) {
+			g.draw.rect(g.settings.width, g.settings.height).fill('#eee').dx(g.settings.rect.left).dy(g.settings.rect.top);
+		}
 	};
 	g.drawLabels = function() {
 	
@@ -224,9 +236,11 @@ window.chartress = function($element, data){
 				posY = posY - (fontSize /3);
 	
 				var text = yPoints[yPoints.length-1 - i];
-				if (text !== 0) {
+				text = g.options.yAxis.label.format(text);
+				text = text.toString();
+				// if (text !== 'ex') {
 	
-					var tnode = g.yLabels.text(text.toString())
+					var tnode = g.yLabels.text(text)
 						.fill(g.settings.yAxis.label.color)
 						.font({
 							family: g.settings.fontFamily,
@@ -239,36 +253,47 @@ window.chartress = function($element, data){
 					tnode.dx((parseInt(g_st(tnode.node).width))*-1 - 10);
 					tnode.dy((parseInt(g_st(tnode.node).height)/2)*-1);
 					g.settings.yPoints.push(posY);
-				};
+				// };
 			})();
 		}
 		// draw xaxis
 		var xPoints = g.settings.longestLine,
-			dateRange = maxLength;
-		// g.log([maxLength, dateRange]);
+			labelRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
+	
+		if (maxLength !== null) {
+			labelRange = maxLength;
+		}
 	
 		g.settings.xPoints = [];
+		var labelPosFix = 0;
+		if (g.settings.type === 'column') {
+			labelRange++;
+			labelPosFix = (g.settings.width / (labelRange)) / 2;
+		}
 	
 		g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
-		for (i = 0; i <= dateRange; i++) {
+		for (i = 0; i <= labelRange; i++) {
 			(function(){
 				var text = (g.settings.xAxis.range.from + i);
 				text = g.options.xAxis.label.format(text);
 				text = text.toString();
-				var proc = ((i) / (dateRange))
+				var proc = ((i) / (labelRange))
 				var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+				var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
+				if (g.settings.xAxis.label.pos === 'top') {
+					posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
+				}
 	
 				if (i%g.settings.xAxis.markEvery === 0) {
-	
 					g.xLabels.text(text)
 						.fill(g.settings.xAxis.label.color)
 						.font({
 							family: g.settings.fontFamily,
 							anchor: 'middle',
-							size: 14
+							size: g.settings.xAxis.label.size
 						})
-						.dx(posX)
-						.dy(g.settings.rect.bottom + g.settings.xAxis.label.y)
+						.dx(posX + labelPosFix)
+						.dy(posY)
 						.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
 	
 				}
@@ -400,42 +425,93 @@ window.chartress = function($element, data){
 	};
 	g.drawColumns = function(){
 		g.draw_columns = [];
-		var i = 0;
-		for (var key in g.options.dataset) {
-			(function(){
+		maxLength++;
+	
+		var columnSpaceX = g.settings.width / maxLength;
+	
+		for (var i = 0; i < maxLength; i++) {
+			g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+e);
+			// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.padding.left;
+			var absPosX = (columnSpaceX * i) + g.settings.padding.left;
+			var corr_label_y = g.settings.columns.labels.y;
+	
+			var e = 0;
+			for (var key in g.options.dataset) {
 				var line = g.options.dataset[key];
 				var name = line.name || (i+1).toString();
-				var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
-				g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+classname);
 				var color = line.color || '#222';
 				var textColor = line.textColor || color;
-				var proc = ((100 / g.options.dataset.length) / 100) * i;
-				var space = g.settings.width / g.options.dataset.length;
-				var xcenter = (proc * g.settings.width) + space - (space/2);
+				var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
+	
 				var columnWidth = g.settings.columns.width;
-				var columnHeight = (line.value / g.settings.largestcolumn) * g.settings.height;
-				var corr_label_y = g.settings.columns.labels.y;
+				var columnSpace = g.settings.columns.space;
+				var columnHeight = (line.__plot[i] / g.settings.largestcolumn) * g.settings.height;
+	
+				var position = maxLength * -0.5;
+				if (maxLength%2) {
+					position+=0.5;
+				}
+				position++;
+				position += e;
+	
+				var offsetX = position* (columnWidth+columnSpace);
 	
 				g.draw_columns[i].text(name)
-						.fill(textColor)
-						.font({
-							family: g.settings.fontFamily,
-							anchor: 'middle',
-							size: g.settings.columns.labels.fontsize
-						})
-						.dx(xcenter + g.settings.padding.left)
-						.dy(g.settings.height + corr_label_y + g.settings.padding.top)
-						.addClass(g.settings.class+'__columns__label '+g.settings.class+'__columns__label--'+classname);
+					.fill(textColor)
+					.dx((absPosX + (columnSpaceX/2)) + offsetX)
+					.dy(g.settings.height + corr_label_y + g.settings.padding.top)
+					.font({
+						family: g.settings.fontFamily,
+						anchor: 'middle',
+						size: g.settings.columns.labels.fontsize
+					})
+					.addClass(g.settings.class+'__columns__label '+g.settings.class+'__columns__label--'+classname);
 	
 				g.draw_columns[i].rect(columnWidth, columnHeight)
-					.dx(xcenter - (columnWidth/2) + g.settings.padding.left)
-					.dy(g.settings.height - columnHeight + g.settings.padding.top)
 					.fill(color)
+					.dx(((absPosX + (columnSpaceX/2)) + offsetX) - columnWidth/2)
+					.dy(g.settings.height - columnHeight + g.settings.padding.top)
 					.addClass(g.settings.class+'__columns__column '+g.settings.class+'__columns__column--'+classname);
 	
-				i++;
-			})();
-		};
+				e++;
+			}
+		}
+	
+		// for (var key in g.options.dataset) {
+		// 	(function(){
+		// 		var line = g.options.dataset[key];
+		// 		var name = line.name || (i+1).toString();
+		// 		var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
+		// 		g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+classname);
+		// 		var color = line.color || '#222';
+		// 		var textColor = line.textColor || color;
+		// 		var proc = ((100 / g.options.dataset.length) / 100) * i;
+		// 		var space = g.settings.width / g.options.dataset.length;
+		// 		var xcenter = (proc * g.settings.width) + space - (space/2);
+		// 		var columnWidth = g.settings.columns.width;
+		// 		var columnHeight = (line.value / g.settings.largestcolumn) * g.settings.height;
+		// 		var corr_label_y = g.settings.columns.labels.y;
+	
+		// 		g.draw_columns[i].text(name)
+		// 				.fill(textColor)
+		// 				.font({
+		// 					family: g.settings.fontFamily,
+		// 					anchor: 'middle',
+		// 					size: g.settings.columns.labels.fontsize
+		// 				})
+		// 				.dx(xcenter + g.settings.padding.left)
+		// 				.dy(g.settings.height + corr_label_y + g.settings.padding.top)
+		// 				.addClass(g.settings.class+'__columns__label '+g.settings.class+'__columns__label--'+classname);
+	
+		// 		g.draw_columns[i].rect(columnWidth, columnHeight)
+		// 			.dx(xcenter - (columnWidth/2) + g.settings.padding.left)
+		// 			.dy(g.settings.height - columnHeight + g.settings.padding.top)
+		// 			.fill(color)
+		// 			.addClass(g.settings.class+'__columns__column '+g.settings.class+'__columns__column--'+classname);
+	
+		// 		i++;
+		// 	})();
+		// };
 	};
 	g.drawPies = function(){
 		var i = 0;
@@ -559,6 +635,7 @@ window.chartress = function($element, data){
 			g.drawLegend();
 		}
 		if (g.settings.type === 'column') {
+			g.drawLabels();
 			g.drawColumns();
 		}
 		if (g.settings.type === 'pie') {

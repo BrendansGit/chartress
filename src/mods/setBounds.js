@@ -1,11 +1,11 @@
 g.setBounds = function() {
-	if (g.settings.type === 'line') {
+	if (g.settings.type === 'line' || g.settings.type == 'column') {
 		var longest = 0;
 		for (var key in g.options.dataset) {
 			(function(){
 				var line = g.options.dataset[key];
 				var plot = line.plot.slice(0);
-				if (plot.length > maxLength) {
+				if (maxLength !== null && plot.length > maxLength) {
 					plot.reverse();
 					plot.length = maxLength;
 					plot.reverse();
@@ -29,10 +29,13 @@ g.setBounds = function() {
 		g.settings.largestcolumn = 0;
 		for (var key in g.options.dataset) {
 			var line = g.options.dataset[key];
-			if (g.settings.largestcolumn < line.value) {
-				g.settings.largestcolumn = line.value;
+			for (var i = 0; i < line.__plot.length; i++) {
+				var point = line.__plot[i];
+				if (g.settings.largestcolumn < point) {
+					g.settings.largestcolumn = point;
+				}
 			}
-		};
+		}
 	}
 	if (g.settings.type === 'pie') {
 		g.settings.pie.total = g.options.pie.total || false;
@@ -57,5 +60,7 @@ g.setBounds = function() {
 	};
 
 	// debug rect
-	// g.draw.rect(g.settings.width, g.settings.height).fill('#eee').dx(g.settings.rect.left).dy(g.settings.rect.top);
+	if (g.options.debug === true) {
+		g.draw.rect(g.settings.width, g.settings.height).fill('#eee').dx(g.settings.rect.left).dy(g.settings.rect.top);
+	}
 };

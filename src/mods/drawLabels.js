@@ -17,9 +17,11 @@ g.drawLabels = function() {
 			posY = posY - (fontSize /3);
 
 			var text = yPoints[yPoints.length-1 - i];
-			if (text !== 0) {
+			text = g.options.yAxis.label.format(text);
+			text = text.toString();
+			// if (text !== 'ex') {
 
-				var tnode = g.yLabels.text(text.toString())
+				var tnode = g.yLabels.text(text)
 					.fill(g.settings.yAxis.label.color)
 					.font({
 						family: g.settings.fontFamily,
@@ -32,36 +34,47 @@ g.drawLabels = function() {
 				tnode.dx((parseInt(g_st(tnode.node).width))*-1 - 10);
 				tnode.dy((parseInt(g_st(tnode.node).height)/2)*-1);
 				g.settings.yPoints.push(posY);
-			};
+			// };
 		})();
 	}
 	// draw xaxis
 	var xPoints = g.settings.longestLine,
-		dateRange = maxLength;
-	// g.log([maxLength, dateRange]);
+		labelRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
+
+	if (maxLength !== null) {
+		labelRange = maxLength;
+	}
 
 	g.settings.xPoints = [];
+	var labelPosFix = 0;
+	if (g.settings.type === 'column') {
+		labelRange++;
+		labelPosFix = (g.settings.width / (labelRange)) / 2;
+	}
 
 	g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
-	for (i = 0; i <= dateRange; i++) {
+	for (i = 0; i <= labelRange; i++) {
 		(function(){
 			var text = (g.settings.xAxis.range.from + i);
 			text = g.options.xAxis.label.format(text);
 			text = text.toString();
-			var proc = ((i) / (dateRange))
+			var proc = ((i) / (labelRange))
 			var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+			var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
+			if (g.settings.xAxis.label.pos === 'top') {
+				posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
+			}
 
 			if (i%g.settings.xAxis.markEvery === 0) {
-
 				g.xLabels.text(text)
 					.fill(g.settings.xAxis.label.color)
 					.font({
 						family: g.settings.fontFamily,
 						anchor: 'middle',
-						size: 14
+						size: g.settings.xAxis.label.size
 					})
-					.dx(posX)
-					.dy(g.settings.rect.bottom + g.settings.xAxis.label.y)
+					.dx(posX + labelPosFix)
+					.dy(posY)
 					.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
 
 			}

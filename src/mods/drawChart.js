@@ -8,6 +8,7 @@ g.drawChart = function() {
 		g.drawLegend();
 	}
 	if (g.settings.type === 'column') {
+		g.drawLabels();
 		g.drawColumns();
 	}
 	if (g.settings.type === 'pie') {

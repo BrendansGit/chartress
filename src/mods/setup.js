@@ -37,6 +37,8 @@ if (typeof g.options.yAxis.label === 'undefined')
 	g.options.yAxis.label = {};
 if (typeof g.options.legend === 'undefined')
 	g.options.legend = {};
+if (typeof g.options.yAxis.label.format === 'undefined')
+	g.options.yAxis.label.format = function(string){return string};
 if (typeof g.options.xAxis.label === 'undefined')
 	g.options.xAxis.label = {};
 if (typeof g.options.xAxis.label.format === 'undefined')
@@ -63,7 +65,7 @@ g.log = function(e){
 var g_st = function(el){
 	return getComputedStyle(el);
 }
-var maxLength = g.options.xAxis.maxRangeLength || Infinity;
+var maxLength = g.options.xAxis.maxRangeLength || null;
 
 g.settings = {
 	yMax: 0,
@@ -92,7 +94,9 @@ g.settings = {
 		markEvery: g.options.xAxis.markEvery || 1,
 		label: {
 			color: g.options.xAxis.label.color || 'gray',
-			y: g.options.xAxis.label.y || 0
+			y: g.options.xAxis.label.y || 0,
+			pos: g.options.xAxis.label.position || 'bottom',
+			size: g.options.xAxis.label.size || 14
 		},
 	},
 	legend: {
@@ -106,7 +110,8 @@ g.settings = {
 		}
 	},
 	columns: {
-		width: g.options.columns.width || 15,
+		width: g.options.columns.width || 40,
+		space: g.options.columns.space || 4,
 		labels: {
 			fontSize: g.options.columns.labels.fontSize || 16,
 			y: g.options.columns.labels.y || 1
@@ -135,9 +140,11 @@ if(g.settings.type === 'line') {
 }
 if(g.settings.type === 'column') {
 	g.settings.padding = {
-		top: g.options.graph.padding.top || 0,
+		top: g.options.graph.padding.top || 25,
 		right: g.options.graph.padding.right || 0,
 		bottom: g.options.graph.padding.bottom || 25,
-		left: g.options.graph.padding.left || 0
-	}
+		left: g.options.graph.padding.left || 35
+	};
+	g.settings.xAxis.label.pos = g.options.xAxis.label.position || 'top';
+	g.settings.xAxis.label.y = g.options.xAxis.label.y || -5;
 }

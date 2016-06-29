@@ -16,6 +16,6 @@
   "main": "dist/chartress.js",
   "ignore": [
     "gulpfile.js",
-    "screenshots",
+    "screenshots"
   ]
 }

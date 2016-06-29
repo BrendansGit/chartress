@@ -33,12 +33,12 @@
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(event) { 
 		var chart = chartress(document.querySelector('.linechart'), linechart);
-
 		chart.drawToCanvas(document.querySelector('#canvas'));
 	});
 
 	var linechart = {
-		lines: [
+		debug: true,
+		dataset: [
 			{
 				name: 'Red',
 				color: 'red',
@@ -60,7 +60,6 @@
 
 	<h2>Line Chart - time</h2>
 	<div class="linechart2"></div>
-	<h2>Copy to Canvas</h2>
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(event) { 
 		var chart = chartress(document.querySelector('.linechart2'), linechart2);
@@ -76,22 +75,29 @@
 			label: {
 				color: '#000',
 				format: function(label){
+					if (label < 10) {
+						label = '0'+label;
+					}
 					return label+':00';
 				}
 			},
-			markEvery: 2,
-			maxRangeLength: 11,
+			markEvery: 1,
+			maxRangeLength: 5,
 			range: {
 				from: 7,
 				to: 17
 			}
 		},
-		lines: [
+		yAxis: {
+			markEvery: 10
+		},
+		dataset: [
 			{
 				name: 'Red',
 				color: 'red',
 				plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
-			},{
+			}
+			,{
 				name: 'Black',
 				plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
 			},{
@@ -115,7 +121,7 @@
 
 	var coumnchart = {
 		type: 'column',
-		lines: [
+		dataset: [
 			{
 				name: 'MO',
 				value: 40,
@@ -154,7 +160,7 @@
 
 	var piechart = {
 		type: 'pie',
-		lines: [
+		dataset: [
 			{
 				value: 100
 			},
@@ -192,7 +198,7 @@
 					}
 				}
 			},
-			lines: [
+			dataset: [
 				{
 					value: 100,
 					width: 20,

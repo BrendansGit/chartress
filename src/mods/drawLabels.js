@@ -37,9 +37,11 @@ g.drawLabels = function() {
 	}
 	// draw xaxis
 	var xPoints = g.settings.longestLine,
-		dateRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
+		dateRange = maxLength;
+	// g.log([maxLength, dateRange]);
 
 	g.settings.xPoints = [];
+
 	g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 	for (i = 0; i <= dateRange; i++) {
 		(function(){
@@ -50,8 +52,6 @@ g.drawLabels = function() {
 			var posX = ((g.settings.width) * proc) + g.settings.padding.left;
 
 			if (i%g.settings.xAxis.markEvery === 0) {
-
-				console.log(i);
 
 				g.xLabels.text(text)
 					.fill(g.settings.xAxis.label.color)

@@ -1,23 +1,31 @@
 window.chartress = function($element, data){
 
-	var that = this;
-	var el = $element;
-	if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
-		el = el[0];
-	}
 	var g = {};
-	function sortNumber(a,b) {
-		return b - a;
-	}
-	
-	g.options = data;
-	
-	g.draw = SVG(el).size('100%', '100%').spof();
-	
-	g.clear = function(){
-		g.draw.clear();
-	}
-	
+		var that = this;
+		var el = $element;
+		if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
+			el = el[0];
+		}
+		function sortNumber(a,b) {
+			return b - a;
+		}
+		
+		g.options = data;
+		
+		g.draw = SVG(el).size('100%', '100%').spof();
+		
+		g.clear = function(){
+			g.draw.clear();
+		}
+		
+		if (g.options.debug === true){
+			console.info('chartress debug enabled for ');
+			console.info(el);
+			console.info('Passed Data: ');
+			console.info(g.options);
+			console.log('------');
+		}
+		
 		if (typeof g.options.graph === 'undefined')
 			g.options.graph = {};
 		if (typeof g.options.xAxis === 'undefined')
@@ -48,6 +56,12 @@ window.chartress = function($element, data){
 			g.options.pie = {};
 		if (typeof g.options.pie.title === 'undefined')
 			g.options.pie.title = {};
+		
+		g.log = function(e){
+			if (g.options.debug === true) {
+				console.log(e);
+			}
+		}
 		
 		var g_st = function(el){
 			return getComputedStyle(el);
@@ -133,9 +147,9 @@ window.chartress = function($element, data){
 	g.setBounds = function() {
 		if (g.settings.type === 'line') {
 			var longest = 0;
-			for (var key in g.options.lines) {
+			for (var key in g.options.dataset) {
 				(function(){
-					var line = g.options.lines[key];
+					var line = g.options.dataset[key];
 					var plot = line.plot.slice(0);
 					if (plot.length > maxLength) {
 						plot.reverse();
@@ -152,14 +166,15 @@ window.chartress = function($element, data){
 					}
 				})();
 			};
+			maxLength = longest;
 			if (g.settings.xAxis.range.to === null) {
 				g.settings.xAxis.range.to = longest;
 			}
 		}
 		if (g.settings.type === 'column') {
 			g.settings.largestcolumn = 0;
-			for (var key in g.options.lines) {
-				var line = g.options.lines[key];
+			for (var key in g.options.dataset) {
+				var line = g.options.dataset[key];
 				if (g.settings.largestcolumn < line.value) {
 					g.settings.largestcolumn = line.value;
 				}
@@ -168,8 +183,8 @@ window.chartress = function($element, data){
 		if (g.settings.type === 'pie') {
 			g.settings.pie.total = g.options.pie.total || false;
 			if (g.settings.pie.total === false) {
-				for (var key in g.options.lines) {
-					var line = g.options.lines[key];
+				for (var key in g.options.dataset) {
+					var line = g.options.dataset[key];
 					g.settings.pie.total += line.value;
 				}
 			}
@@ -229,9 +244,11 @@ window.chartress = function($element, data){
 		}
 		// draw xaxis
 		var xPoints = g.settings.longestLine,
-			dateRange = g.settings.xAxis.range.to - g.settings.xAxis.range.from;
+			dateRange = maxLength;
+		// g.log([maxLength, dateRange]);
 	
 		g.settings.xPoints = [];
+	
 		g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
 		for (i = 0; i <= dateRange; i++) {
 			(function(){
@@ -242,8 +259,6 @@ window.chartress = function($element, data){
 				var posX = ((g.settings.width) * proc) + g.settings.padding.left;
 	
 				if (i%g.settings.xAxis.markEvery === 0) {
-	
-					console.log(i);
 	
 					g.xLabels.text(text)
 						.fill(g.settings.xAxis.label.color)
@@ -264,20 +279,23 @@ window.chartress = function($element, data){
 	};
 	g.drawLines = function(){
 		g.draw_plots = g.draw.group().addClass(g.settings.class+'__plots');
-		for (var key in g.options.lines) {
-			var line = g.options.lines[key];
+	
+		for (var key in g.options.dataset) {
+	
+			var line = g.options.dataset[key];
 			var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 			var color = line.color || 'black';
 			var width = line.width || 2;
-			var x = 0;
 			var pointsArr = [];
 			line.__plotgroup = g.draw_plots.group();
 			line.__plotgroup.addClass(g.settings.class+'__plot chartress__plot--'+(classname)).attr('plot-name', classname);
 	
+			var x = 0;
 			for (var key in line.__plot) {
 				(function(){
 					var point = line.__plot[key];
-					var xPos = g.settings.xPoints[x];
+					// var xPos = g.settings.xPoints[x];
+					var xPos = ((x/maxLength) * g.settings.width) + g.settings.padding.left;
 					var yPos = ((point / g.settings.yMax) * g.settings.height);
 					yPos = (g.settings.height - yPos) + g.settings.padding.top;
 					pointsArr.push([xPos, yPos]);
@@ -330,9 +348,9 @@ window.chartress = function($element, data){
 		g.draw_legend.width(g.settings.outerWidth).dmove(posX, posY);
 	
 		var i = 0;
-		for (var key in g.options.lines) {
+		for (var key in g.options.dataset) {
 			(function(){
-				var line = g.options.lines[key];
+				var line = g.options.dataset[key];
 				if (line.name) {
 					var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 					var color = line.color || 'black';
@@ -383,21 +401,22 @@ window.chartress = function($element, data){
 	g.drawColumns = function(){
 		g.draw_columns = [];
 		var i = 0;
-		for (var key in g.options.lines) {
+		for (var key in g.options.dataset) {
 			(function(){
-				var line = g.options.lines[key];
-				var classname = line.classname || line.name.replace(/ /g, '_').toLowerCase();
+				var line = g.options.dataset[key];
+				var name = line.name || (i+1).toString();
+				var classname = line.classname || name.replace(/ /g, '_').toLowerCase();
 				g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+classname);
 				var color = line.color || '#222';
 				var textColor = line.textColor || color;
-				var proc = ((100 / g.options.lines.length) / 100) * i;
-				var space = g.settings.width / g.options.lines.length;
+				var proc = ((100 / g.options.dataset.length) / 100) * i;
+				var space = g.settings.width / g.options.dataset.length;
 				var xcenter = (proc * g.settings.width) + space - (space/2);
 				var columnWidth = g.settings.columns.width;
 				var columnHeight = (line.value / g.settings.largestcolumn) * g.settings.height;
 				var corr_label_y = g.settings.columns.labels.y;
 	
-				g.draw_columns[i].text(line.name)
+				g.draw_columns[i].text(name)
 						.fill(textColor)
 						.font({
 							family: g.settings.fontFamily,
@@ -432,16 +451,16 @@ window.chartress = function($element, data){
 	
 		if (total === 'count') {
 			total = 0;
-			for (var key in g.options.lines) {
-				var line = g.options.lines[key];
+			for (var key in g.options.dataset) {
+				var line = g.options.dataset[key];
 				total+=line.value;
 			}
 		}
 	
 		var mask;
-		for (var key in g.options.lines) {
+		for (var key in g.options.dataset) {
 			(function(){
-				var line = g.options.lines[key];
+				var line = g.options.dataset[key];
 	
 				var filledProc = 0;
 				var rotate = -90 + (filledProc);

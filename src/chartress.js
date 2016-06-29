@@ -1,5 +1,7 @@
 window.chartress = function($element, data){
 
+	var g = {};
+	
 	//= require mods/setup.js
 	//= require mods/setBounds.js
 	//= require mods/drawLabels.js

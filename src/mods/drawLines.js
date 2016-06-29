@@ -1,19 +1,22 @@
 g.drawLines = function(){
 	g.draw_plots = g.draw.group().addClass(g.settings.class+'__plots');
-	for (var key in g.options.lines) {
-		var line = g.options.lines[key];
+
+	for (var key in g.options.dataset) {
+
+		var line = g.options.dataset[key];
 		var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 		var color = line.color || 'black';
 		var width = line.width || 2;
-		var x = 0;
 		var pointsArr = [];
 		line.__plotgroup = g.draw_plots.group();
 		line.__plotgroup.addClass(g.settings.class+'__plot chartress__plot--'+(classname)).attr('plot-name', classname);
 
+		var x = 0;
 		for (var key in line.__plot) {
 			(function(){
 				var point = line.__plot[key];
-				var xPos = g.settings.xPoints[x];
+				// var xPos = g.settings.xPoints[x];
+				var xPos = ((x/maxLength) * g.settings.width) + g.settings.padding.left;
 				var yPos = ((point / g.settings.yMax) * g.settings.height);
 				yPos = (g.settings.height - yPos) + g.settings.padding.top;
 				pointsArr.push([xPos, yPos]);

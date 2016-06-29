@@ -12,16 +12,16 @@ g.drawPies = function(){
 
 	if (total === 'count') {
 		total = 0;
-		for (var key in g.options.lines) {
-			var line = g.options.lines[key];
+		for (var key in g.options.dataset) {
+			var line = g.options.dataset[key];
 			total+=line.value;
 		}
 	}
 
 	var mask;
-	for (var key in g.options.lines) {
+	for (var key in g.options.dataset) {
 		(function(){
-			var line = g.options.lines[key];
+			var line = g.options.dataset[key];
 
 			var filledProc = 0;
 			var rotate = -90 + (filledProc);

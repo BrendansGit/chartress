@@ -1,9 +1,9 @@
 g.setBounds = function() {
 	if (g.settings.type === 'line') {
 		var longest = 0;
-		for (var key in g.options.lines) {
+		for (var key in g.options.dataset) {
 			(function(){
-				var line = g.options.lines[key];
+				var line = g.options.dataset[key];
 				var plot = line.plot.slice(0);
 				if (plot.length > maxLength) {
 					plot.reverse();
@@ -20,14 +20,15 @@ g.setBounds = function() {
 				}
 			})();
 		};
+		maxLength = longest;
 		if (g.settings.xAxis.range.to === null) {
 			g.settings.xAxis.range.to = longest;
 		}
 	}
 	if (g.settings.type === 'column') {
 		g.settings.largestcolumn = 0;
-		for (var key in g.options.lines) {
-			var line = g.options.lines[key];
+		for (var key in g.options.dataset) {
+			var line = g.options.dataset[key];
 			if (g.settings.largestcolumn < line.value) {
 				g.settings.largestcolumn = line.value;
 			}
@@ -36,8 +37,8 @@ g.setBounds = function() {
 	if (g.settings.type === 'pie') {
 		g.settings.pie.total = g.options.pie.total || false;
 		if (g.settings.pie.total === false) {
-			for (var key in g.options.lines) {
-				var line = g.options.lines[key];
+			for (var key in g.options.dataset) {
+				var line = g.options.dataset[key];
 				g.settings.pie.total += line.value;
 			}
 		}

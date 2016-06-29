@@ -27,9 +27,9 @@ g.drawLegend = function(){
 	g.draw_legend.width(g.settings.outerWidth).dmove(posX, posY);
 
 	var i = 0;
-	for (var key in g.options.lines) {
+	for (var key in g.options.dataset) {
 		(function(){
-			var line = g.options.lines[key];
+			var line = g.options.dataset[key];
 			if (line.name) {
 				var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 				var color = line.color || 'black';

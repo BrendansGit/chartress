@@ -56,7 +56,6 @@ g.drawPies = function(){
 
 			var dia = (2 * Math.PI *(size/2));
 			g.pies[classname].el.attr('stroke-dasharray', 0+','+dia);
-
 			g.pies[classname].el.rotate(rotate);
 			
 			if (line.mask !== false) {
@@ -64,14 +63,10 @@ g.drawPies = function(){
 				g.pies[classname].el.maskWith(mask);
 			}
 
-			g.pies[classname].set = function(nv) {
-				var res = ((nv*dia) / total);
-				g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
-			};
-			setTimeout(function(){
-				g.pies[classname].set(line.value);
-				g.pies[classname].el.addClass(g.settings.class+'__pie--' + classname);
-			});
+
+			var res = ((nv*dia) / total);
+			g.pies[classname].el.attr('stroke-dasharray', res+','+dia);
+			g.pies[classname].el.addClass(g.settings.class+'__pie--' + classname);
 			i++;
 		})();
 	};

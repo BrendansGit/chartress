@@ -48,15 +48,15 @@ g.setBounds = function() {
 	}
 
 	g.settings.outerWidth = parseInt(g_st(chel).width);
-	g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
+	g.settings.width = g.settings.outerWidth - g.settings.graph.padding.right - g.settings.graph.padding.left;
 	g.settings.outerHeight = parseInt(g_st(chel).height);
-	g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
+	g.settings.height = g.settings.outerHeight - g.settings.graph.padding.top - g.settings.graph.padding.bottom;
 
 	g.settings.rect = {
-		top: g.settings.padding.top,
-		left: g.settings.padding.left,
-		right: g.settings.padding.left + g.settings.width,
-		bottom: g.settings.outerHeight - g.settings.padding.bottom
+		top: g.settings.graph.padding.top,
+		left: g.settings.graph.padding.left,
+		right: g.settings.graph.padding.left + g.settings.width,
+		bottom: g.settings.outerHeight - g.settings.graph.padding.bottom
 	};
 
 	// debug rect

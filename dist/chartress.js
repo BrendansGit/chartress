@@ -16,6 +16,7 @@ window.chartress = function($element, data){
 		}
 		
 		g.options = data;
+		g.settings = {};
 		
 		g.draw = SVG(chel).size('100%', '100%').spof();
 		
@@ -31,38 +32,116 @@ window.chartress = function($element, data){
 			console.log('------');
 		}
 		
-		if (typeof g.options.graph === 'undefined')
-			g.options.graph = {};
-		if (typeof g.options.xAxis === 'undefined')
-			g.options.xAxis = {};
-		if (typeof g.options.xAxis.range === 'undefined')
-			g.options.xAxis.range = {};
-		if (typeof g.options.xAxis.legend === 'undefined')
-			g.options.xAxis.legend = {};
-		if (typeof g.options.yAxis === 'undefined')
-			g.options.yAxis = {};
-		if (typeof g.options.yAxis.label === 'undefined')
-			g.options.yAxis.label = {};
-		if (typeof g.options.legend === 'undefined')
-			g.options.legend = {};
-		if (typeof g.options.yAxis.label.format === 'undefined')
+		var isU = function(e) {
+			return (typeof e === 'undefined');
+		}
+		
+		var checkOption = [
+			['graph'],
+			['graph.padding'],
+			['graph.padding.left', 0],
+			['graph.padding.right', 0],
+			['graph.padding.top', 0],
+			['graph.padding.bottom', 0],
+			['xAxis'],
+			['xAxis.range'],
+			['xAxis.range.from', 0],
+			['xAxis.range.to', null],
+			['xAxis.legend'],
+			['xAxis.legend.x'],
+			['xAxis.legend.y'],
+			['xAxis.lines'],
+			['xAxis.lines.color', '#0f0'],
+			['xAxis.lines.width', 1],
+			['xAxis.label'],
+			['xAxis.label.markEvery', 1],
+			['xAxis.label.markCount', null],
+			['xAxis.label.color', 'gray'],
+			['xAxis.label.y', 0],
+			['xAxis.label.position', 'bottom'],
+			['xAxis.label.size', 14],
+			['yAxis'],
+			['yAxis.lines'],
+			['yAxis.lines.color', '#00f'],
+			['yAxis.lines.width', 1],
+			['yAxis.label'],
+			['yAxis.label.markEvery', null],
+			['yAxis.label.markCount', 4],
+			['yAxis.label.color', 'gray'],
+			['yAxis.label.x', 0],
+			['legend'],
+			['legend.x', 100],
+			['legend.y', 0],
+			['legend.padding'],
+			['legend.padding.top', 0],
+			['legend.padding.right', 0],
+			['legend.padding.bottom', 0],
+			['legend.padding.left', 0],
+			['columns'],
+			['columns.width', 40],
+			['columns.space', 1],
+			['columns.labels'],
+			['columns.labels.fontSize', 16],
+			['columns.labels.y', 1],
+			['pie'],
+			['pie.total', 100],
+			['pie.title'],
+			['pie.title.size', 50],
+			['pie.title.bold', true],
+			['pie.title.text', false],
+			['pie.title.pre'],
+			['pie.title.pre.text', false],
+			['pie.title.pre.size', 14],
+			['pie.title.sub'],
+			['pie.title.sub.text', false],
+			['pie.title.sub.size', 14],
+			['maxLength', null],
+			['yMax', 0],
+			['fontFamily', 'Helvetica'],
+			['class', 'chartress'],
+			['type', 'line'],
+		];
+		
+		for (var i = 0; i < checkOption.length; i++) {
+			var ch = checkOption[i][0].split('.');
+			var dval = {};
+			if (!isU(checkOption[i][1])) {
+				dval = checkOption[i][1];
+			}
+			var objD = g.options;
+		
+			if (ch.length === 1) {
+				if (isU(g.options[ch[0]])) {
+					g.options[ch[0]] = dval;
+					g.settings[ch[0]] = dval;
+				}else{
+					g.settings[ch[0]] = g.options[ch[0]];
+				}
+			}
+			if (ch.length === 2) {
+				if (isU(g.options[ch[0]][ch[1]])) {
+					g.options[ch[0]][ch[1]] = dval;
+					g.settings[ch[0]][ch[1]] = dval;
+				}else{
+					g.settings[ch[0]][ch[1]] = g.options[ch[0]][ch[1]];
+				}
+			}
+			if (ch.length === 3) {
+				if (isU(g.options[ch[0]][ch[1]][ch[2]])) {
+					g.options[ch[0]][ch[1]][ch[2]] = dval;
+					g.settings[ch[0]][ch[1]][ch[2]] = dval;
+				}else{
+					g.settings[ch[0]][ch[1]][ch[2]] = g.options[ch[0]][ch[1]][ch[2]];
+				}
+			}
+		}
+		
+		if (isU(g.options.yAxis.label.format))
 			g.options.yAxis.label.format = function(string){return string};
-		if (typeof g.options.xAxis.label === 'undefined')
-			g.options.xAxis.label = {};
-		if (typeof g.options.xAxis.label.format === 'undefined')
+		
+		if (isU(g.options.xAxis.label.format))
 			g.options.xAxis.label.format = function(string){return string};
-		if (typeof g.options.legend.padding === 'undefined')
-			g.options.legend.padding = {};
-		if (typeof g.options.graph.padding === 'undefined')
-			g.options.graph.padding = {};
-		if (typeof g.options.columns === 'undefined')
-			g.options.columns = {};
-		if (typeof g.options.columns.labels === 'undefined')
-			g.options.columns.labels = {};
-		if (typeof g.options.pie === 'undefined')
-			g.options.pie = {};
-		if (typeof g.options.pie.title === 'undefined')
-			g.options.pie.title = {};
+		
 		
 		g.log = function(e){
 			if (g.options.debug === true) {
@@ -74,72 +153,10 @@ window.chartress = function($element, data){
 			return getComputedStyle(el);
 		}
 		
-		g.settings = {
-			maxLength: g.options.xAxis.maxRangeLength || null,
-			yMax: 0,
-			fontSize: g.options.graph.fontFamily || 'Helvetica',
-			class: g.options.graph.class_prefix || 'chartress',
-			padding: {
-				top: g.options.graph.padding.top || 0,
-				right: g.options.graph.padding.right || 0,
-				bottom: g.options.graph.padding.bottom || 0,
-				left: g.options.graph.padding.left || 0
-			},
-			type: g.options.type || 'line',
-			yAxis: {
-				markEvery: g.options.yAxis.markEvery || 1,
-				label: {
-					color: g.options.yAxis.label.color || 'gray',
-					x: g.options.yAxis.label.x || 0
-				},
-				markEvery: g.options.yAxis.markEvery || 20,
-			},
-			xAxis: {
-				range: {
-					from: g.options.xAxis.range.from || 0,
-					to: g.options.xAxis.range.to || null,
-				},
-				markEvery: g.options.xAxis.markEvery || 1,
-				label: {
-					color: g.options.xAxis.label.color || 'gray',
-					y: g.options.xAxis.label.y || 0,
-					pos: g.options.xAxis.label.position || 'bottom',
-					size: g.options.xAxis.label.size || 14
-				},
-			},
-			legend: {
-				x: g.options.legend.x || 100,
-				y: g.options.legend.x || 0,
-				padding: {
-					top: g.options.legend.padding.top || 0,
-					right: g.options.legend.padding.right || 0,
-					bottom: g.options.legend.padding.bottom || 0,
-					left: g.options.legend.padding.left || 0,
-				}
-			},
-			columns: {
-				width: g.options.columns.width || 40,
-				space: g.options.columns.space || 4,
-				labels: {
-					fontSize: g.options.columns.labels.fontSize || 16,
-					y: g.options.columns.labels.y || 1
-				}
-			},
-			pie: {
-				total: g.options.pie.total || 100,
-				red: 'blue',
-				title: {
-					size: g.options.pie.title.size || 50,
-					bold: g.options.pie.title.bold || true,
-					text: g.options.pie.title.text || false,
-					pre: g.options.pie.title.pre || false,
-					sub: g.options.pie.title.sub || false
-				}
-			}
-		};
+		
 		// if (true) {}
 		if(g.settings.type === 'line') {
-			g.settings.padding = {
+			g.settings.graph.padding = {
 				top: g.options.graph.padding.top || 10,
 				right: g.options.graph.padding.right || 8,
 				bottom: g.options.graph.padding.bottom || 25,
@@ -147,7 +164,7 @@ window.chartress = function($element, data){
 			}
 		}
 		if(g.settings.type === 'column') {
-			g.settings.padding = {
+			g.settings.graph.padding = {
 				top: g.options.graph.padding.top || 25,
 				right: g.options.graph.padding.right || 0,
 				bottom: g.options.graph.padding.bottom || 25,
@@ -206,15 +223,15 @@ window.chartress = function($element, data){
 		}
 	
 		g.settings.outerWidth = parseInt(g_st(chel).width);
-		g.settings.width = g.settings.outerWidth - g.settings.padding.right - g.settings.padding.left;
+		g.settings.width = g.settings.outerWidth - g.settings.graph.padding.right - g.settings.graph.padding.left;
 		g.settings.outerHeight = parseInt(g_st(chel).height);
-		g.settings.height = g.settings.outerHeight - g.settings.padding.top - g.settings.padding.bottom;
+		g.settings.height = g.settings.outerHeight - g.settings.graph.padding.top - g.settings.graph.padding.bottom;
 	
 		g.settings.rect = {
-			top: g.settings.padding.top,
-			left: g.settings.padding.left,
-			right: g.settings.padding.left + g.settings.width,
-			bottom: g.settings.outerHeight - g.settings.padding.bottom
+			top: g.settings.graph.padding.top,
+			left: g.settings.graph.padding.left,
+			right: g.settings.graph.padding.left + g.settings.width,
+			bottom: g.settings.outerHeight - g.settings.graph.padding.bottom
 		};
 	
 		// debug rect
@@ -224,19 +241,26 @@ window.chartress = function($element, data){
 	};
 	g.drawLabels = function() {
 	
-		if (true) {}
 		// draw yaxis
+		if (g.settings.yAxis.label.markEvery === null) {
+			g.settings.yAxis.label.markEvery = Math.round(g.settings.yMax / g.settings.yAxis.label.markCount);
+		}
 		var yPoints = [], i;
-		for (i = 0; i < (g.settings.yMax + g.settings.yAxis.markEvery); i++) {
-			if (i%g.settings.yAxis.markEvery === 0) {
+		for (i = 0; i < (g.settings.yMax + g.settings.yAxis.label.markEvery); i++) {
+			var test = i%g.settings.yAxis.label.markEvery;
+			if (test === 0 && i <= g.settings.yMax) {
 				yPoints.push(i);
 			}
 		}
+	
+		// largest label is always max value
+		yPoints[yPoints.length - 1] = g.settings.yMax;
+	
 		g.yLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--yAxis');
 		g.settings.yPoints = [];
 		for (i = 0; i < yPoints.length; i++) {
 			(function(){
-				var posY = ((1-(yPoints[i] / g.settings.yMax) * g.settings.height) *-1) + g.settings.padding.top;
+				var posY = ((1-(yPoints[i] / g.settings.yMax) * g.settings.height) *-1) + g.settings.graph.padding.top;
 				var fontSize = 14;
 				posY = posY - (fontSize /3);
 	
@@ -276,7 +300,7 @@ window.chartress = function($element, data){
 			labelPosFix = (g.settings.width / (labelRange)) / 2;
 		}
 	
-		if (g.options.xAxis.visible !== false) {
+		if (g.options.xAxis.visible !== false && g.options.xAxis.lines !== false) {
 			var startAt = 0;
 			if (g.options.xAxis.maxRangeLength) {
 				startAt = g.options.xAxis.maxRangeLength + 1;
@@ -290,13 +314,14 @@ window.chartress = function($element, data){
 					text = g.options.xAxis.label.format(text);
 					text = text.toString();
 					var proc = ((i) / (labelRange-1))
-					var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+					var posX = ((g.settings.width) * proc) + g.settings.graph.padding.left;
 					var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
 					if (g.settings.xAxis.label.pos === 'top') {
 						posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
 					}
 	
-					if (i%g.settings.xAxis.markEvery === 0) {
+					if (i%g.settings.xAxis.label.markEvery === 0) {
+						if (g.options.xAxis.visible !== false) {
 						g.xLabels.text(text)
 							.fill(g.settings.xAxis.label.color)
 							.font({
@@ -307,7 +332,7 @@ window.chartress = function($element, data){
 							.dx(posX + labelPosFix)
 							.dy(posY)
 							.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
-	
+						}
 					}
 	
 					g.settings.xPoints.push(posX);
@@ -332,9 +357,9 @@ window.chartress = function($element, data){
 			for (var key in line.__plot) {
 				(function(){
 					var point = line.__plot[key];
-					var xPos = ((x/(g.settings.maxLength-1)) * g.settings.width) + g.settings.padding.left;
+					var xPos = ((x/(g.settings.maxLength-1)) * g.settings.width) + g.settings.graph.padding.left;
 					var yPos = ((point / g.settings.yMax) * g.settings.height);
-					yPos = (g.settings.height - yPos) + g.settings.padding.top;
+					yPos = (g.settings.height - yPos) + g.settings.graph.padding.top;
 					pointsArr.push([xPos, yPos]);
 					x++;
 				})();
@@ -356,85 +381,6 @@ window.chartress = function($element, data){
 			};
 		};
 	};
-	g.drawLegend = function(){
-		g.draw_legend = g.draw.group().addClass(g.settings.class+'__legend').font({
-			family: g.settings.fontFamily,
-			size: 12
-		});
-	
-		var pX = 0;
-		var posX = (g.settings.outerWidth/100) * g.settings.legend.x;
-		if (g.settings.legend.x > 50) {
-			posX -= g.settings.legend.padding.right;
-			pX = g.settings.legend.padding.right*-1;
-		}else{
-			posX += g.settings.legend.padding.left;
-			pX = g.settings.legend.padding.left;
-		}
-	
-		var pY = 0;
-		var posY = (g.settings.outerHeight/100) * g.settings.legend.y;
-		if (g.settings.legend.y < 50) {
-			posY += g.settings.legend.padding.top;
-			pY = g.settings.legend.padding.top;
-		}else{
-			posY -= g.settings.legend.padding.bottom;
-			pY = g.settings.legend.padding.bottom*-1;
-		}
-	
-		g.draw_legend.width(g.settings.outerWidth).dmove(posX, posY);
-	
-		var i = 0;
-		for (var key in g.options.dataset) {
-			(function(){
-				var line = g.options.dataset[key];
-				if (line.name) {
-					var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
-					var color = line.color || 'black';
-					var width = line.width || 2;
-					line.__legend = g.draw_legend.group().addClass(g.settings.class+'__legend__row chartress__legend--'+classname).attr('plot-name', classname);
-					var string = line.name;
-					var text = line.__legend.text(string)
-						.fill(color)
-						.font({
-							family: g.settings.fontFamily
-						});
-					var tx = (parseInt(g_st(text.node).width) + 40)*-1 - 5;
-					var ty = ((parseInt(g_st(text.node).height))*i) - 9;
-					text.dx(tx);
-					text.dy(ty);
-					var rad = line.rad || 6;
-					var comp = (parseInt(g_st(text.node).height)/2 + 1);
-					var pathY = (parseInt(g_st(text.node).height))*i + comp;
-					var line_path = [
-						[-35,pathY],
-						[-5,pathY],
-					];
-					var polyline = line.__legend.polyline(line_path)
-						.fill('none')
-						.stroke({ color: color, width: width })
-						.addClass(g.settings.class+'__line chartress__legend__line chartress__legend__line--'+classname);
-					if(line.dash){
-						polyline.attr('stroke-dasharray', line.dash);
-					}
-					line.__legend.circle(rad)
-						.stroke({width: width, color: color})
-						.fill('white')
-						.dx(0 - rad/2 -5)
-						.dy(pathY - rad/2)
-						.addClass(g.settings.class+'__dot chartress__legend__dot--'+(classname));
-	
-					line.__legend.mouseover(function(){
-						var t = this;
-						line.__plotgroup.addClass(g.settings.class+'__plot--hover');
-					}).mouseout(function(){
-						line.__plotgroup.removeClass(g.settings.class+'__plot--hover');
-					});
-					i++;
-				}
-			})();
-		};
-	};
 	g.drawColumns = function(){
 		g.draw_columns = [];
 		var useLength = g.settings.maxLength;
@@ -443,8 +389,8 @@ window.chartress = function($element, data){
 	
 		for (var i = 0; i < useLength; i++) {
 			g.draw_columns[i] = g.draw.group().addClass(g.settings.class+'__columns__group '+g.settings.class+'__columns__group--'+i);
-			// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.padding.left;
-			var absPosX = (columnSpaceX * i) + g.settings.padding.left;
+			// var absPosX = ((i/maxLength) * g.settings.width) + g.settings.graph.padding.left;
+			var absPosX = (columnSpaceX * i) + g.settings.graph.padding.left;
 			var corr_label_y = g.settings.columns.labels.y;
 	
 			var e = 0;
@@ -472,7 +418,7 @@ window.chartress = function($element, data){
 				g.draw_columns[i].text(name)
 					.fill(textColor)
 					.dx((absPosX + (columnSpaceX/2)) + offsetX)
-					.dy(g.settings.height + corr_label_y + g.settings.padding.top)
+					.dy(g.settings.height + corr_label_y + g.settings.graph.padding.top)
 					.font({
 						family: g.settings.fontFamily,
 						anchor: 'middle',
@@ -483,7 +429,7 @@ window.chartress = function($element, data){
 				g.draw_columns[i].rect(columnWidth, columnHeight)
 					.fill(color)
 					.dx(((absPosX + (columnSpaceX/2)) + offsetX) - columnWidth/2)
-					.dy(g.settings.height - columnHeight + g.settings.padding.top)
+					.dy(g.settings.height - columnHeight + g.settings.graph.padding.top)
 					.addClass(g.settings.class+'__columns__column '+g.settings.class+'__columns__column--'+classname);
 	
 				e++;
@@ -563,14 +509,14 @@ window.chartress = function($element, data){
 			})();
 		};
 	
-		var title = g.settings.pie.title || false;
+		var title = g.settings.pie.title;
 		if (title.text !== false) {
 			g.draw_pie_title = g.draw_pie.group().addClass(g.settings.class+'__pie__title');
 			var maintext = g.draw_pie_title.text(title.text).addClass(g.settings.class+'__pie__title--main').font({
 				family: g.settings.fontFamily,
 				size: title.size,
 				anchor: 'middle',
-			}).dx(g.settings.width / 2 + g.settings.padding.left).dy(g.settings.height / 2 + g.settings.padding.top - (title.size * 0.9));
+			}).dx(g.settings.width / 2 + g.settings.graph.padding.left).dy(g.settings.height / 2 + g.settings.graph.padding.top - (title.size * 0.9));
 			if (title.bold) {
 				maintext.font({
 					family: g.settings.fontFamily,
@@ -578,24 +524,103 @@ window.chartress = function($element, data){
 				});
 			}
 	
-			var preTitle = title.pre || false;
-			if (preTitle) {
+			var preTitle = title.pre;
+			if (title.pre.text) {
 				pretext = g.draw_pie_title.text(preTitle.text).addClass(g.settings.class+'__pie__title--pre').font({
 					family: g.settings.fontFamily,
 					size: preTitle.size,
 					anchor: 'middle'
-				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) - (title.size/2) - (preTitle.size) - 5 + g.settings.padding.top);
+				}).dx(g.settings.width / 2 + g.settings.graph.padding.left).dy((g.settings.height / 2) - (title.size/2) - (preTitle.size) - 5 + g.settings.graph.padding.top);
 			}
 	
-			var subTitle = title.sub || false;
-			if (subTitle) {
+			var subTitle = title.sub;
+			if (title.sub.text) {
 				subText = g.draw_pie_title.text(subTitle.text).addClass(g.settings.class+'__pie__title--sub').font({
 					family: g.settings.fontFamily,
 					size: subTitle.size,
 					anchor: 'middle'
-				}).dx(g.settings.width / 2 + g.settings.padding.left).dy((g.settings.height / 2) + (title.size/2.5) + g.settings.padding.top);
+				}).dx(g.settings.width / 2 + g.settings.graph.padding.left).dy((g.settings.height / 2) + (title.size/2.5) + g.settings.graph.padding.top);
 			}
 		}
+	};
+	g.drawLegend = function(){
+		g.draw_legend = g.draw.group().addClass(g.settings.class+'__legend').font({
+			family: g.settings.fontFamily,
+			size: 12
+		});
+	
+		var pX = 0;
+		var posX = (g.settings.outerWidth/100) * g.settings.legend.x;
+		if (g.settings.legend.x > 50) {
+			posX -= g.settings.legend.padding.right;
+			pX = g.settings.legend.padding.right*-1;
+		}else{
+			posX += g.settings.legend.padding.left;
+			pX = g.settings.legend.padding.left;
+		}
+	
+		var pY = 0;
+		var posY = (g.settings.outerHeight/100) * g.settings.legend.y;
+		if (g.settings.legend.y < 50) {
+			posY += g.settings.legend.padding.top;
+			pY = g.settings.legend.padding.top;
+		}else{
+			posY -= g.settings.legend.padding.bottom;
+			pY = g.settings.legend.padding.bottom*-1;
+		}
+	
+		g.draw_legend.width(g.settings.outerWidth).dmove(posX, posY);
+	
+		var i = 0;
+		for (var key in g.options.dataset) {
+			(function(){
+				var line = g.options.dataset[key];
+				if (line.name) {
+					var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
+					var color = line.color || 'black';
+					var width = line.width || 2;
+					line.__legend = g.draw_legend.group().addClass(g.settings.class+'__legend__row chartress__legend--'+classname).attr('plot-name', classname);
+					var string = line.name;
+					var text = line.__legend.text(string)
+						.fill(color)
+						.font({
+							family: g.settings.fontFamily
+						});
+					var tx = (parseInt(g_st(text.node).width) + 40)*-1 - 5;
+					var ty = ((parseInt(g_st(text.node).height))*i) - 9;
+					text.dx(tx);
+					text.dy(ty);
+					var rad = line.rad || 6;
+					var comp = (parseInt(g_st(text.node).height)/2 + 1);
+					var pathY = (parseInt(g_st(text.node).height))*i + comp;
+					var line_path = [
+						[-35,pathY],
+						[-5,pathY],
+					];
+					var polyline = line.__legend.polyline(line_path)
+						.fill('none')
+						.stroke({ color: color, width: width })
+						.addClass(g.settings.class+'__line chartress__legend__line chartress__legend__line--'+classname);
+					if(line.dash){
+						polyline.attr('stroke-dasharray', line.dash);
+					}
+					line.__legend.circle(rad)
+						.stroke({width: width, color: color})
+						.fill('white')
+						.dx(0 - rad/2 -5)
+						.dy(pathY - rad/2)
+						.addClass(g.settings.class+'__dot chartress__legend__dot--'+(classname));
+	
+					line.__legend.mouseover(function(){
+						var t = this;
+						line.__plotgroup.addClass(g.settings.class+'__plot--hover');
+					}).mouseout(function(){
+						line.__plotgroup.removeClass(g.settings.class+'__plot--hover');
+					});
+					i++;
+				}
+			})();
+		};
 	};
 	g.drawChart = function() {
 		g.clear();

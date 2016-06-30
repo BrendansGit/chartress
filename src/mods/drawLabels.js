@@ -1,18 +1,25 @@
 g.drawLabels = function() {
 
-	if (true) {}
 	// draw yaxis
+	if (g.settings.yAxis.label.markEvery === null) {
+		g.settings.yAxis.label.markEvery = Math.round(g.settings.yMax / g.settings.yAxis.label.markCount);
+	}
 	var yPoints = [], i;
-	for (i = 0; i < (g.settings.yMax + g.settings.yAxis.markEvery); i++) {
-		if (i%g.settings.yAxis.markEvery === 0) {
+	for (i = 0; i < (g.settings.yMax + g.settings.yAxis.label.markEvery); i++) {
+		var test = i%g.settings.yAxis.label.markEvery;
+		if (test === 0 && i <= g.settings.yMax) {
 			yPoints.push(i);
 		}
 	}
+
+	// largest label is always max value
+	yPoints[yPoints.length - 1] = g.settings.yMax;
+
 	g.yLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--yAxis');
 	g.settings.yPoints = [];
 	for (i = 0; i < yPoints.length; i++) {
 		(function(){
-			var posY = ((1-(yPoints[i] / g.settings.yMax) * g.settings.height) *-1) + g.settings.padding.top;
+			var posY = ((1-(yPoints[i] / g.settings.yMax) * g.settings.height) *-1) + g.settings.graph.padding.top;
 			var fontSize = 14;
 			posY = posY - (fontSize /3);
 
@@ -52,7 +59,7 @@ g.drawLabels = function() {
 		labelPosFix = (g.settings.width / (labelRange)) / 2;
 	}
 
-	if (g.options.xAxis.visible !== false) {
+	if (g.options.xAxis.visible !== false && g.options.xAxis.lines !== false) {
 		var startAt = 0;
 		if (g.options.xAxis.maxRangeLength) {
 			startAt = g.options.xAxis.maxRangeLength + 1;
@@ -66,13 +73,14 @@ g.drawLabels = function() {
 				text = g.options.xAxis.label.format(text);
 				text = text.toString();
 				var proc = ((i) / (labelRange-1))
-				var posX = ((g.settings.width) * proc) + g.settings.padding.left;
+				var posX = ((g.settings.width) * proc) + g.settings.graph.padding.left;
 				var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
 				if (g.settings.xAxis.label.pos === 'top') {
 					posY = g.settings.rect.top - (g.settings.xAxis.label.size*1.5) + g.settings.xAxis.label.y;
 				}
 
-				if (i%g.settings.xAxis.markEvery === 0) {
+				if (i%g.settings.xAxis.label.markEvery === 0) {
+					if (g.options.xAxis.visible !== false) {
 					g.xLabels.text(text)
 						.fill(g.settings.xAxis.label.color)
 						.font({
@@ -83,7 +91,7 @@ g.drawLabels = function() {
 						.dx(posX + labelPosFix)
 						.dy(posY)
 						.addClass(g.settings.class+'__labels__label chartress__labels--xAxis');
-
+					}
 				}
 
 				g.settings.xPoints.push(posX);

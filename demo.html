@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Chartress Demo</title>
+	<!-- <title>Chartress Demo</title> -->
 	<style>
 		body {
 			font-family: helvetica, arial;
@@ -49,7 +49,7 @@
 				plot: [0, 10, 50, 80, 53, 20, 25, 80, 70, 5, 40],
 			},{
 				name: 'Black',
-				plot: [40, 20, 1, 50, 60, 70, 100, 70, 40, 30, 10],
+				plot: [40, 20, 1, 50, 60, 70, 240, 70, 40, 30, 10],
 			},{
 				name: 'Gray',
 				dash: '10,5',
@@ -199,36 +199,36 @@
 	});
 
 	var piechart2 = {
-			type: 'pie',
-			pie: {
-				total: 100,
-				title: {
-					text: '39:44',
-					size: 45,
-					bold: true,
-					pre: {
-						text: 'Avg. visiting time',
-						size: 14
-					},
-					sub: {
-						text: 'min',
-						size: 14
-					}
+		type: 'pie',
+		pie: {
+			total: 100,
+			title: {
+				text: '39:44',
+				size: 45,
+				bold: true,
+				pre: {
+					text: 'Avg. visiting time',
+					size: 14
+				},
+				sub: {
+					text: 'min',
+					size: 14
 				}
-			},
-			dataset: [
-				{
-					value: 100,
-					width: 20,
-					position: 0
-				},{
-					value: 80,
-					classname: 'outline',
-					color: 'orange',
-					width: 50
-				}
-			]
-		};
+			}
+		},
+		dataset: [
+			{
+				value: 100,
+				width: 20,
+				position: 0
+			},{
+				value: 80,
+				classname: 'outline',
+				color: 'orange',
+				width: 50
+			}
+		]
+	};
 
 	</script>
 

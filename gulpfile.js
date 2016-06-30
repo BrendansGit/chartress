@@ -4,6 +4,7 @@ var pump = require('pump');
 var include = require('gulp-include');
 var rename = require('gulp-rename');
 var watch = require('gulp-watch');
+var livereload = require('gulp-livereload');
 
 gulp.task('scripts', function() {
   console.log('-- gulp is running task \'scripts\'');
@@ -21,12 +22,14 @@ gulp.task('compress', function () {
 		  suffix: '.min'
 		}),
 		gulp.dest('dist'),
+		livereload()
 	]);
 });
 
 gulp.task('watch', function () {
 	// Endless stream mode 
     // return watch('src/**/*.js', ['scripts', 'compress']);
+    livereload.listen();
     gulp.watch('src/**/*.js', ['build']);
 });
 

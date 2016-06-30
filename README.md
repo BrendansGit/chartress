@@ -49,7 +49,7 @@ var linechart = {
 			plot: [4, 6, 20, 18, 24, 8, 0, 0, 20, 10, 5],
 		}
 	]
-}
+};
 ```
 
 ### Column Chart:

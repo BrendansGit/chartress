@@ -284,12 +284,12 @@ window.chartress = function($element, data){
 			// g.log([startAt, labelRange])
 	
 			g.xLabels = g.draw.group().addClass(g.settings.class+'__labels chartress__labels--xAxis');
-			for (i = 0; i <= labelRange; i++) {
+			for (i = 0; i < labelRange; i++) {
 				(function(){
 					var text = (g.settings.xAxis.range.from + i) + startAt;
 					text = g.options.xAxis.label.format(text);
 					text = text.toString();
-					var proc = ((i) / (labelRange))
+					var proc = ((i) / (labelRange-1))
 					var posX = ((g.settings.width) * proc) + g.settings.padding.left;
 					var posY = g.settings.rect.bottom + g.settings.xAxis.label.y;
 					if (g.settings.xAxis.label.pos === 'top') {

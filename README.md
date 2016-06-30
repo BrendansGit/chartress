@@ -10,7 +10,10 @@ Requires [svg.js](http://svgjs.com/)
 ```bash
 bower install chartress --save
 ```
-
+#### Include svg.js into your project 
+```html
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.3.2/svg.min.js"></script>
+```
 #### Include chartress into your project 
 ```html
 <script type="text/javascript" src="/bower_components/chartress/dist/chartress.min.js"></script>

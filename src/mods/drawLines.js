@@ -1,29 +1,29 @@
 g.drawLines = function(){
-	g.draw_plots = g.draw.group().addClass(g.settings.class+'__plots');
+	g.draw_plots = g.draw.group().addClass(g.s.class+'__plots');
 
-	for (var key in g.options.dataset) {
+	for (var key in g.o.dataset) {
 
-		var line = g.options.dataset[key];
+		var line = g.o.dataset[key];
 		var classname = line.classname || line.name.toLowerCase().replace(/ /g, '_');
 		var color = line.color || 'black';
 		var width = line.width || 2;
 		var pointsArr = [];
 		line.__plotgroup = g.draw_plots.group();
-		line.__plotgroup.addClass(g.settings.class+'__plot chartress__plot--'+(classname)).attr('plot-name', classname);
+		line.__plotgroup.addClass(g.s.class+'__plot chartress__plot--'+(classname)).attr('plot-name', classname);
 
 		var x = 0;
 		for (var key in line.__plot) {
 			(function(){
 				var point = line.__plot[key];
-				var xPos = ((x/(g.settings.maxLength-1)) * g.settings.width) + g.settings.graph.padding.left;
-				var yPos = ((point / g.settings.yMax) * g.settings.height);
-				yPos = (g.settings.height - yPos) + g.settings.graph.padding.top;
+				var xPos = ((x/(g.s.maxLength-1)) * g.s.width) + g.s.graph.padding.left;
+				var yPos = ((point / g.s.yMax) * g.s.height);
+				yPos = (g.s.height - yPos) + g.s.graph.padding.top;
 				pointsArr.push([xPos, yPos]);
 				x++;
 			})();
 		};
 
-		line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ color: color, width: width }).addClass(g.settings.class+'__line chartress__line--'+classname);
+		line.__plotsvg = line.__plotgroup.polyline(pointsArr).fill('none').stroke({ color: color, width: width }).addClass(g.s.class+'__line chartress__line--'+classname);
 		if(line.dash){
 			line.__plotsvg.attr('stroke-dasharray', line.dash);
 		}
@@ -31,7 +31,7 @@ g.drawLines = function(){
 		for (var key in pointsArr) {
 			(function(){
 				var point = pointsArr[key];
-				line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass(g.settings.class+'__dot chartress__dot--'+(classname)).stroke({
+				line.__plotgroup.circle(rad).dx(point[0] - rad/2).dy(point[1] - rad/2).addClass(g.s.class+'__dot chartress__dot--'+(classname)).stroke({
 					color: color,
 					width: width
 				}).fill('white');

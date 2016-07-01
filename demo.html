@@ -41,7 +41,7 @@
 	});
 
 	var linechart = {
-		// debug: true,
+		debug: true,
 		dataset: [
 			{
 				name: 'Red',
@@ -180,11 +180,20 @@
 		type: 'pie',
 		dataset: [
 			{
-				value: 100
+				value: 40,
+				name: 'default Color'
 			},
 			{
 				value: 61,
-				color: '#1b860b'
+				color: ['#1b860b', 'orange'],
+			},
+			{
+				value: 61,
+				name: 'orange'
+			},
+			{
+				value: 20,
+				name: 'red'
 			}
 		]
 	};
@@ -207,7 +216,7 @@
 				size: 45,
 				bold: true,
 				pre: {
-					text: 'Avg. visiting time',
+					text: 'random time:',
 					size: 14
 				},
 				sub: {

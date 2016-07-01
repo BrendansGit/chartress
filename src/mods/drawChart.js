@@ -2,16 +2,16 @@ g.drawChart = function() {
 	g.clear();
 	g.setBounds();
 
-	if (g.settings.type === 'line') {
+	if (g.s.type === 'line') {
 		g.drawLabels();
 		g.drawLines();
 		g.drawLegend();
 	}
-	if (g.settings.type === 'column') {
+	if (g.s.type === 'column') {
 		g.drawLabels();
 		g.drawColumns();
 	}
-	if (g.settings.type === 'pie') {
+	if (g.s.type === 'pie') {
 		g.drawPies();
 	}
 

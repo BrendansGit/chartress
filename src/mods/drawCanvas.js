@@ -1,8 +1,8 @@
 g.drawToCanvas = function($canvas){
 	var svg = $element.querySelector('svg');
 	var ctx = $canvas.getContext('2d');
-	ctx.canvas.width = g.settings.outerWidth;
-	ctx.canvas.height = g.settings.outerHeight;
+	ctx.canvas.width = g.s.outerWidth;
+	ctx.canvas.height = g.s.outerHeight;
 
 	var img = new Image();
 	var xml = new XMLSerializer().serializeToString(svg);

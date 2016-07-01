@@ -506,7 +506,7 @@ window.chartress = function($element, data){
 						stop.at(0, line.color[0])
 						stop.at(1, line.color[1])
 					})
-					gradient.from('50%', '50%').to('50%', '50%').radius('100%');
+					gradient.from('50%', '50%').to('50%', '50%').radius('50%');
 				}
 	
 				var filledProc = 0;

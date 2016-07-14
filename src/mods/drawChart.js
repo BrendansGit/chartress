@@ -1,3 +1,4 @@
+/* global g */
 g.drawChart = function() {
 	g.clear();
 	g.setBounds();
@@ -15,7 +16,7 @@ g.drawChart = function() {
 		g.drawPies();
 	}
 
-	setTimeout(function(){
+	setTimeout(function() {
 		g.draw.spof();
 	});
 };

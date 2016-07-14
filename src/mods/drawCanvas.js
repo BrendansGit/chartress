@@ -1,4 +1,6 @@
-g.drawToCanvas = function($canvas){
+/* global g $element btoa*/
+
+g.drawToCanvas = function($canvas) {
 	var svg = $element.querySelector('svg');
 	var ctx = $canvas.getContext('2d');
 	ctx.canvas.width = g.s.outerWidth;

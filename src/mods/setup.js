@@ -1,4 +1,5 @@
-var that = this;
+/* global $element jQuery g data SVG*/
+// var that = this;
 
 // check if element is from jquery
 if (typeof jQuery !== 'undefined' && ($element instanceof jQuery)) {
@@ -11,23 +12,24 @@ g.o = data;
 g.s = {};
 
 // core functions
-g.log = function(e){
+g.log = function(e) {
 	if (g.o.debug === true) {
 		console.log(e);
 	}
-}
-g.clear = function(){
+};
+g.clear = function() {
 	g.draw.clear();
-}
-var g_st = function(el){
+};
+var g_st = function(el) {
 	return getComputedStyle(el);
-}
-function sortNumber(a,b) {
+};
+
+var sortNumber = function(a, b) {
 	return b - a;
-}
+};
 var isU = function(e) {
 	return (typeof e === 'undefined');
-}
+};
 
 // options list and defaults
 var checkOption = [
@@ -58,7 +60,9 @@ var checkOption = [
 	['xAxis.lines.color', 'rgba(0,0,0,.1)'],
 	['xAxis.lines.width', 1],
 	['xAxis.label'],
-	['xAxis.label.format', function(string){return string}],
+	['xAxis.label.format', function(string) {
+		return string;
+	}],
 	['xAxis.label.fontSize', 14],
 	['xAxis.label.markEvery', 1],
 	['xAxis.label.markCount', null],
@@ -74,7 +78,9 @@ var checkOption = [
 	['yAxis.lines.color', 'rgba(0,0,0,.1)'],
 	['yAxis.lines.width', 1],
 	['yAxis.label'],
-	['yAxis.label.format', function(string){return string}],
+	['yAxis.label.format', function(string) {
+		return string;
+	}],
 	['yAxis.label.fontSize', 14],
 	['yAxis.label.markEvery', null],
 	['yAxis.label.markCount', 4],
@@ -108,7 +114,7 @@ var checkOption = [
 	['pie.title.pre.size', 14],
 	['pie.title.sub'],
 	['pie.title.sub.text', false],
-	['pie.title.sub.size', 14],
+	['pie.title.sub.size', 14]
 ];
 
 // generate g.o and g.s
@@ -118,13 +124,13 @@ for (var i = 0; i < checkOption.length; i++) {
 	if (!isU(checkOption[i][1])) {
 		dval = checkOption[i][1];
 	}
-	var objD = g.o;
+	// var objD = g.o;
 
 	if (ch.length === 1) {
 		if (isU(g.o[ch[0]])) {
 			g.o[ch[0]] = dval;
 			g.s[ch[0]] = dval;
-		}else{
+		} else {
 			g.s[ch[0]] = g.o[ch[0]];
 		}
 	}
@@ -132,7 +138,7 @@ for (var i = 0; i < checkOption.length; i++) {
 		if (isU(g.o[ch[0]][ch[1]])) {
 			g.o[ch[0]][ch[1]] = dval;
 			g.s[ch[0]][ch[1]] = dval;
-		}else{
+		} else {
 			g.s[ch[0]][ch[1]] = g.o[ch[0]][ch[1]];
 		}
 	}
@@ -140,7 +146,7 @@ for (var i = 0; i < checkOption.length; i++) {
 		if (isU(g.o[ch[0]][ch[1]][ch[2]])) {
 			g.o[ch[0]][ch[1]][ch[2]] = dval;
 			g.s[ch[0]][ch[1]][ch[2]] = dval;
-		}else{
+		} else {
 			g.s[ch[0]][ch[1]][ch[2]] = g.o[ch[0]][ch[1]][ch[2]];
 		}
 	}
@@ -148,15 +154,15 @@ for (var i = 0; i < checkOption.length; i++) {
 
 // default padding
 // TODO: clean this up
-if(g.s.type === 'line') {
+if (g.s.type === 'line') {
 	g.s.graph.padding = {
 		top: g.o.graph.padding.top || 10,
 		right: g.o.graph.padding.right || 8,
 		bottom: g.o.graph.padding.bottom || 25,
 		left: g.o.graph.padding.left || 35
-	}
+	};
 }
-if(g.s.type === 'column') {
+if (g.s.type === 'column') {
 	g.s.graph.padding = {
 		top: g.o.graph.padding.top || 25,
 		right: g.o.graph.padding.right || 0,
@@ -166,7 +172,6 @@ if(g.s.type === 'column') {
 	g.s.xAxis.label.pos = g.o.xAxis.label.position || 'top';
 	g.s.xAxis.label.y = g.o.xAxis.label.y || -5;
 }
-
 
 // generate its own div
 var chel = document.createElement('div');
@@ -181,12 +186,10 @@ chel.style.width = '100%';
 g.draw = SVG(chel).size('100%', '100%').spof();
 
 // debug options
-if (g.o.debug === true){
+if (g.o.debug === true) {
 	console.info('chartress debug enabled for ');
 	console.info(chel);
 	console.info('Passed Data: ');
 	console.info(g.o);
 	console.log('------');
 }
-
-

@@ -1,8 +1,9 @@
+/* global g sortNumber g_st chel */
 g.setBounds = function() {
-	if (g.s.type === 'line' || g.s.type == 'column') {
+	if (g.s.type === 'line' || g.s.type === 'column') {
 		var longest = 0;
 		for (var key in g.o.dataset) {
-			(function(){
+			(function() {
 				var line = g.o.dataset[key];
 				var plot = line.plot.slice(0);
 				if (g.s.maxLength !== null && plot.length > g.s.maxLength) {
@@ -27,7 +28,7 @@ g.setBounds = function() {
 	}
 	if (g.s.type === 'column') {
 		g.s.largestcolumn = 0;
-		for (var key in g.o.dataset) {
+		for (key in g.o.dataset) {
 			var line = g.o.dataset[key];
 			for (var i = 0; i < line.__plot.length; i++) {
 				var point = line.__plot[i];
@@ -40,16 +41,16 @@ g.setBounds = function() {
 	if (g.s.type === 'pie') {
 		g.s.pie.total = g.o.pie.total || false;
 		if (g.s.pie.total === false) {
-			for (var key in g.o.dataset) {
-				var line = g.o.dataset[key];
-				g.s.pie.total += line.value;
+			for (key in g.o.dataset) {
+				var t_line = g.o.dataset[key];
+				g.s.pie.total += t_line.value;
 			}
 		}
 	}
 
-	g.s.outerWidth = parseInt(g_st(chel).width);
+	g.s.outerWidth = parseInt(g_st(chel).width, 10);
 	g.s.width = g.s.outerWidth - g.s.graph.padding.right - g.s.graph.padding.left;
-	g.s.outerHeight = parseInt(g_st(chel).height);
+	g.s.outerHeight = parseInt(g_st(chel).height, 10);
 	g.s.height = g.s.outerHeight - g.s.graph.padding.top - g.s.graph.padding.bottom;
 
 	g.s.rect = {

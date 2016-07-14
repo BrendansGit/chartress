@@ -1,4 +1,5 @@
 /* global g */
+
 g.drawChart = function() {
 	g.clear();
 	g.setBounds();
